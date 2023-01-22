@@ -27,8 +27,6 @@ for i in lista_rutas:
         dfestadios=pd.read_json(i)
     elif i.endswith("tabla_ligas.json"):
         dfligas=pd.read_json(i)
-    elif i.endswith("tabla_partidos.json"):
-        dfpartidos=pd.read_json(i)
     else:
         pass
 
@@ -70,12 +68,12 @@ consulta_creacion_ligas="""CREATE TABLE ligas
                             Entrenados INT,
                             PRIMARY KEY (NombreLiga))
                             """
-creacion_tabla_ligas=tabla_ligas.crear_tabla(consulta_creacion_ligas)
+#creacion_tabla_ligas=tabla_ligas.crear_tabla(consulta_creacion_ligas)
 
 #Insertamos los registros en la tabla ligas
 consulta_insercion_ligas="""INSERT INTO ligas 
 VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
-insertar_tabla_ligas=tabla_ligas.insertar_registros(consulta_insercion_ligas, lista_ligas)
+#insertar_tabla_ligas=tabla_ligas.insertar_registros(consulta_insercion_ligas, lista_ligas)
 
 
 #--------------------------------------------TABLA COMPETICIONES---------------------------------------
@@ -98,12 +96,12 @@ PRIMARY KEY (CodCompeticion),
 FOREIGN KEY (Competicion) REFERENCES ligas (NombreLiga) ON DELETE CASCADE)
 """
 
-creacion_tabla_competiciones=tabla_competiciones.crear_tabla(consulta_creacion_competiciones)
+#creacion_tabla_competiciones=tabla_competiciones.crear_tabla(consulta_creacion_competiciones)
 
 #Insertamos los registros en la tabla competiciones
 consulta_insercion_competiciones="""INSERT INTO competiciones 
 VALUES(%s, %s, %s, %s, %s, %s, %s)"""
-insertar_tabla_competiciones=tabla_competiciones.insertar_registros(consulta_insercion_competiciones, lista_competiciones)
+#insertar_tabla_competiciones=tabla_competiciones.insertar_registros(consulta_insercion_competiciones, lista_competiciones)
 
 
 #--------------------------------------------TABLA ESTADIOS---------------------------------------
@@ -129,12 +127,12 @@ consulta_creacion_estadios="""CREATE TABLE estadios
                                 PRIMARY KEY (CodEstadio))
                                 """
 
-creacion_tabla_estadios=tabla_estadios.crear_tabla(consulta_creacion_estadios)
+#creacion_tabla_estadios=tabla_estadios.crear_tabla(consulta_creacion_estadios)
 
 #Insertamos los registros en la tabla estadios
 consulta_insercion_estadios="""INSERT INTO estadios 
 VALUES(%s, %s, %s, %s, %s, %s, %s)"""
-insertar_tabla_estadios=tabla_estadios.insertar_registros(consulta_insercion_estadios, lista_estadios)
+#insertar_tabla_estadios=tabla_estadios.insertar_registros(consulta_insercion_estadios, lista_estadios)
 
 
 #--------------------------------------------TABLA EQUIPOS---------------------------------------
@@ -160,24 +158,17 @@ Partidos INT,
 PRIMARY KEY (NombreEquipo), 
 FOREIGN KEY (CodEstadio) REFERENCES estadios (CodEstadio) ON DELETE CASCADE)"""
 
-creacion_tabla_equipos=tabla_equipos.crear_tabla(consulta_creacion_equipos)
+#creacion_tabla_equipos=tabla_equipos.crear_tabla(consulta_creacion_equipos)
 
 #Insertamos los registros en la tabla equipos
 consulta_insercion_equipos="""INSERT INTO equipos 
 VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
-insertar_tabla_equipos=tabla_equipos.insertar_registros(consulta_insercion_equipos, lista_equipos)
+#insertar_tabla_equipos=tabla_equipos.insertar_registros(consulta_insercion_equipos, lista_equipos)
 
 
 #--------------------------------------------TABLA PARTIDOS---------------------------------------
 #Creamos un objeto tabla para los partidos
-tabla_partidos=Tabla("partidos", nombre_bbdd, bbdd, c, dfpartidos)
-
-#Obtenemos los registros en forma de lista
-lista_partidos=tabla_partidos.convertir_df_lista()
-
-#Ponemos la posicion donde iria el codigo como None
-for i in lista_partidos:
-    i.insert(0, None)
+tabla_partidos=Tabla("partidos", nombre_bbdd, bbdd, c)
 
 #Creamos la tabla partidos
 consulta_creacion_partidos="""CREATE TABLE partidos 
@@ -196,12 +187,6 @@ FOREIGN KEY (CodEstadio) REFERENCES estadios (CodEstadio) ON DELETE CASCADE,
 FOREIGN KEY (CodCompeticion) REFERENCES competiciones (CodCompeticion))"""
 
 creacion_tabla_partidos=tabla_partidos.crear_tabla(consulta_creacion_partidos)
-
-#Insertamos los registros en la tabla partidos
-consulta_insercion_partidos="""INSERT INTO partidos 
-VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
-insertar_tabla_partidos=tabla_partidos.insertar_registros(consulta_insercion_partidos, lista_partidos)
-
 
 
 #--------------------------------------------TABLA DESPLAZAMIENTOS---------------------------------------
