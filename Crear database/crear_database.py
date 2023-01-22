@@ -47,7 +47,7 @@ nombre_bbdd="futbol"
 
 #--------------------------------------------TABLA LIGAS---------------------------------------
 #Creamos un objeto tabla para las ligas
-tabla_ligas=Tabla(dfligas,"ligas", nombre_bbdd, bbdd, c)
+tabla_ligas=Tabla("ligas", nombre_bbdd, bbdd, c, dfligas)
 
 #Obtenemos los registros en forma de lista
 lista_ligas=tabla_ligas.convertir_df_lista()
@@ -70,17 +70,17 @@ consulta_creacion_ligas="""CREATE TABLE ligas
                             Entrenados INT,
                             PRIMARY KEY (NombreLiga))
                             """
-#creacion_tabla_ligas=tabla_ligas.crear_tabla(consulta_creacion_ligas)
+creacion_tabla_ligas=tabla_ligas.crear_tabla(consulta_creacion_ligas)
 
 #Insertamos los registros en la tabla ligas
 consulta_insercion_ligas="""INSERT INTO ligas 
 VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
-#insertar_tabla_ligas=tabla_ligas.insertar_registros(consulta_insercion_ligas, lista_ligas)
+insertar_tabla_ligas=tabla_ligas.insertar_registros(consulta_insercion_ligas, lista_ligas)
 
 
 #--------------------------------------------TABLA COMPETICIONES---------------------------------------
 #Creamos un objeto tabla para las competiciones
-tabla_competiciones=Tabla(dfcompeticiones,"competiciones", nombre_bbdd, bbdd, c)
+tabla_competiciones=Tabla("competiciones", nombre_bbdd, bbdd, c, dfcompeticiones)
 
 #Obtenemos los registros en forma de lista
 lista_competiciones=tabla_competiciones.convertir_df_lista()
@@ -98,17 +98,17 @@ PRIMARY KEY (CodCompeticion),
 FOREIGN KEY (Competicion) REFERENCES ligas (NombreLiga) ON DELETE CASCADE)
 """
 
-#creacion_tabla_competiciones=tabla_competiciones.crear_tabla(consulta_creacion_competiciones)
+creacion_tabla_competiciones=tabla_competiciones.crear_tabla(consulta_creacion_competiciones)
 
 #Insertamos los registros en la tabla competiciones
 consulta_insercion_competiciones="""INSERT INTO competiciones 
 VALUES(%s, %s, %s, %s, %s, %s, %s)"""
-#insertar_tabla_competiciones=tabla_competiciones.insertar_registros(consulta_insercion_competiciones, lista_competiciones)
+insertar_tabla_competiciones=tabla_competiciones.insertar_registros(consulta_insercion_competiciones, lista_competiciones)
 
 
 #--------------------------------------------TABLA ESTADIOS---------------------------------------
 #Creamos un objeto tabla para los estadios
-tabla_estadios=Tabla(dfestadios,"estadios", nombre_bbdd, bbdd, c)
+tabla_estadios=Tabla("estadios", nombre_bbdd, bbdd, c, dfestadios)
 
 #Obtenemos los registros en forma de lista
 lista_estadios=tabla_estadios.convertir_df_lista()
@@ -129,17 +129,17 @@ consulta_creacion_estadios="""CREATE TABLE estadios
                                 PRIMARY KEY (CodEstadio))
                                 """
 
-#creacion_tabla_estadios=tabla_estadios.crear_tabla(consulta_creacion_estadios)
+creacion_tabla_estadios=tabla_estadios.crear_tabla(consulta_creacion_estadios)
 
 #Insertamos los registros en la tabla estadios
 consulta_insercion_estadios="""INSERT INTO estadios 
 VALUES(%s, %s, %s, %s, %s, %s, %s)"""
-#insertar_tabla_estadios=tabla_estadios.insertar_registros(consulta_insercion_estadios, lista_estadios)
+insertar_tabla_estadios=tabla_estadios.insertar_registros(consulta_insercion_estadios, lista_estadios)
 
 
 #--------------------------------------------TABLA EQUIPOS---------------------------------------
 #Creamos un objeto tabla para las equipos
-tabla_equipos=Tabla(dfequipos,"equipos", nombre_bbdd, bbdd, c)
+tabla_equipos=Tabla("equipos", nombre_bbdd, bbdd, c, dfequipos)
 
 #Obtenemos los registros en forma de lista
 lista_equipos=tabla_equipos.convertir_df_lista()
@@ -160,17 +160,17 @@ Partidos INT,
 PRIMARY KEY (NombreEquipo), 
 FOREIGN KEY (CodEstadio) REFERENCES estadios (CodEstadio) ON DELETE CASCADE)"""
 
-#creacion_tabla_equipos=tabla_equipos.crear_tabla(consulta_creacion_equipos)
+creacion_tabla_equipos=tabla_equipos.crear_tabla(consulta_creacion_equipos)
 
 #Insertamos los registros en la tabla equipos
 consulta_insercion_equipos="""INSERT INTO equipos 
 VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
-#insertar_tabla_equipos=tabla_equipos.insertar_registros(consulta_insercion_equipos, lista_equipos)
+insertar_tabla_equipos=tabla_equipos.insertar_registros(consulta_insercion_equipos, lista_equipos)
 
 
 #--------------------------------------------TABLA PARTIDOS---------------------------------------
 #Creamos un objeto tabla para los partidos
-tabla_partidos=Tabla(dfpartidos,"partidos", nombre_bbdd, bbdd, c)
+tabla_partidos=Tabla("partidos", nombre_bbdd, bbdd, c, dfpartidos)
 
 #Obtenemos los registros en forma de lista
 lista_partidos=tabla_partidos.convertir_df_lista()
@@ -195,18 +195,18 @@ FOREIGN KEY (Equipo) REFERENCES equipos (NombreEquipo) ON DELETE CASCADE,
 FOREIGN KEY (CodEstadio) REFERENCES estadios (CodEstadio) ON DELETE CASCADE,
 FOREIGN KEY (CodCompeticion) REFERENCES competiciones (CodCompeticion))"""
 
-#creacion_tabla_partidos=tabla_partidos.crear_tabla(consulta_creacion_partidos)
+creacion_tabla_partidos=tabla_partidos.crear_tabla(consulta_creacion_partidos)
 
 #Insertamos los registros en la tabla partidos
 consulta_insercion_partidos="""INSERT INTO partidos 
 VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
-#insertar_tabla_partidos=tabla_partidos.insertar_registros(consulta_insercion_partidos, lista_partidos)
+insertar_tabla_partidos=tabla_partidos.insertar_registros(consulta_insercion_partidos, lista_partidos)
 
 
 
 #--------------------------------------------TABLA DESPLAZAMIENTOS---------------------------------------
 #Creamos un objeto tabla para los desplazamientos
-tabla_desplazamientos=Tabla(None,"desplazamientos", nombre_bbdd, bbdd, c)
+tabla_desplazamientos=Tabla("desplazamientos", nombre_bbdd, bbdd, c)
 
 #Creamos la tabla desplazamientos
 consulta_creacion_desplazamientos="""CREATE TABLE desplazamientos 
@@ -219,4 +219,4 @@ Transporte VARCHAR(50),
 PRIMARY KEY (CodDesplazamiento),
 FOREIGN KEY (CodPartido) REFERENCES partidos (CodPartido) ON DELETE CASCADE)"""
 
-#creacion_tabla_desplazamientos=tabla_desplazamientos.crear_tabla(consulta_creacion_desplazamientos)
+creacion_tabla_desplazamientos=tabla_desplazamientos.crear_tabla(consulta_creacion_desplazamientos)

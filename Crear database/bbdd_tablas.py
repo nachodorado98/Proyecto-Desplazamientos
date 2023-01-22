@@ -14,12 +14,12 @@ class BaseDatos():
 #Clase para crear cada Tabla	
 class Tabla():
 	
-	def __init__(self, dataframe, nombre, nombre_bbdd, bbdd, cursor):
-		self.dataframe=dataframe
+	def __init__(self, nombre, nombre_bbdd, bbdd, cursor, dataframe=None):
 		self.nombre=nombre
 		self.nombre_bbdd=nombre_bbdd
 		self.bbdd=bbdd
 		self.cursor=cursor
+		self.dataframe=dataframe
 
 	#Convierte los df en listas
 	def convertir_df_lista(self):
