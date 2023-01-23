@@ -186,7 +186,7 @@ FOREIGN KEY (Equipo) REFERENCES equipos (NombreEquipo) ON DELETE CASCADE,
 FOREIGN KEY (CodEstadio) REFERENCES estadios (CodEstadio) ON DELETE CASCADE,
 FOREIGN KEY (CodCompeticion) REFERENCES competiciones (CodCompeticion))"""
 
-creacion_tabla_partidos=tabla_partidos.crear_tabla(consulta_creacion_partidos)
+#creacion_tabla_partidos=tabla_partidos.crear_tabla(consulta_creacion_partidos)
 
 
 #--------------------------------------------TABLA DESPLAZAMIENTOS---------------------------------------
