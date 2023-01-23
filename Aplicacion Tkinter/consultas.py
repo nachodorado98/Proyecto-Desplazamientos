@@ -71,6 +71,67 @@ class Consulta():
 								(None,codigo,ida,vuelta,acompanante,transporte))
 
 		self.bbdd.commit()
-		#print(str(codigo)+" "+ida+" "+vuelta+" "+acompanante+" "+transporte)
+		#print("Codigo: "str(codigo)+" Ida: "+ida+" Vuelta: "+vuelta+" Acompanante: "+acompanante+" Transporte: "+transporte)
+
+
+	#Funcion que nos permite conocer informacion sobre el equipo del desplazamiento cruzando tablas
+	def datos_sobre_equipo(self, codigo_desplazamiento):
+		self.cursor.execute("""USE futbol""")
+		self.cursor.execute("""SELECT e.NombreEquipo, e.Pais, e.Fundacion, e.LigasNacionales, e.Champions, e.MaximoGoleador, e.MaximoApariciones
+               FROM desplazamientos d
+               JOIN partidos p
+               ON d.CodPartido=p.CodPartido
+               JOIN equipos e
+               ON e.NombreEquipo=p.Equipo
+               WHERE d.CodDesplazamiento=%s""",
+                (codigo_desplazamiento,))
+
+		return self.cursor.fetchone()
+	
+
+	#Funcion que nos permite conocer informacion sobre la temporada del desplazamiento cruzando tablas
+	def datos_temporada(self, codigo_desplazamiento):
+		self.cursor.execute("""USE futbol""")
+		self.cursor.execute("""SELECT c.Competicion, c.Temporada, c.NumeroEquipos, c.Campeon, c.Pichichi, c.Goles
+               FROM desplazamientos d
+               JOIN partidos p
+               ON d.CodPartido=p.CodPartido
+               JOIN competiciones c
+               ON c.CodCompeticion=p.CodCompeticion
+               WHERE d.CodDesplazamiento=%s""",
+                (codigo_desplazamiento,))
+
+		return self.cursor.fetchone()
+
+
+	#Funcion que nos permite conocer informacion sobre el historico de la competicion del desplazamiento cruzando tablas
+	def datos_historico(self, codigo_desplazamiento):
+		self.cursor.execute("""USE futbol""")
+		self.cursor.execute("""SELECT l.NombreLiga, l.MasParticipaciones, l.Participaciones, l.MasVictorias, l.MasDerrotas
+               FROM desplazamientos d
+               JOIN partidos p
+               ON d.CodPartido=p.CodPartido
+               JOIN competiciones c
+               ON c.CodCompeticion=p.CodCompeticion
+               JOIN ligas l
+               ON l.NombreLiga=c.Competicion
+               WHERE d.CodDesplazamiento=%s""",
+                (codigo_desplazamiento,))
+
+		return self.cursor.fetchone()
+
+	#Funcion que nos permite conocer toda la informacion sobre el partido del desplazamiento
+	def datos_totales_partido(self, codigo_desplazamiento):
+		self.cursor.execute("""USE futbol""")
+		self.cursor.execute("""SELECT p.Fecha, p.Hora, p.Resultado, p.Equipo, c.Competicion, c.Temporada
+                   FROM desplazamientos d
+                   JOIN partidos p
+                   ON d.CodPartido=p.CodPartido
+                   JOIN competiciones c
+                   ON c.CodCompeticion=p.CodCompeticion
+                   WHERE d.CodDesplazamiento=%s""",
+                    (codigo_desplazamiento,))
+
+		return self.cursor.fetchone()
 
 		

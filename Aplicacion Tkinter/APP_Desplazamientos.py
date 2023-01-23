@@ -4,6 +4,7 @@ from tkinter import ttk
 from tkcalendar import *
 from tkinter import messagebox
 import os
+import re
 #Importamos la clase Consulta para realizar todas las consultas a la BBDD
 from consultas import Consulta
 
@@ -22,8 +23,144 @@ def ver_mapa():
 def detalle_desplazamiento():
     pass
 
+
+#Funcion que pasado un tiempo, nos destruye la ventana
+def destruccion(emergente):
+    emergente.destroy()
+
+#Funcion que crea una ventana emergente segun los datos que quieras ver en detalle
+def poner_datos_emergentes(datos, titulo, lista_texto, e=None):
+
+    #Creamos la ventana emergente
+    emergente=Toplevel()
+    emergente.geometry("500x300")
+    emergente.title("Datos en detalle")
+    emergente.resizable(0,0)
+    
+    #Creamos un frame general para poner los widgets
+    frame=Frame(emergente, bg="skyblue")
+    frame.pack(fill="both", expand=True)
+    
+    #Creamos un frame para el titulo
+    frame_title=Frame(frame, bg="skyblue")
+    frame_title.pack()
+    label_titulo=Label(frame_title, text=titulo, bg="skyblue", font=("Helvetica", 18, "bold"))
+    label_titulo.pack(pady=5)
+    
+    #Creamos un frame para los datos
+    frame_labels=Frame(frame, bg="skyblue")
+    frame_labels.pack()
+    
+    #Iteramos por los datos y su texto para ubicarlos conjuntamente
+    for i in range(len(datos)):
+
+        label_texto=Label(frame_labels, text=lista_texto[i]+": ", bg="skyblue", font=("Helvetica", 12, "bold"))
+        label_texto.grid(row=i, column=0, pady=5)
+
+        label=Label(frame_labels, text=datos[i], bg="skyblue", font=("Helvetica", 12, "bold"))
+        label.grid(row=i, column=1,pady=5)
+    
+    #Llamamos a la funcion destruccion para cerrar la ventana pasados 9 segundos
+    emergente.after(9000, lambda : destruccion(emergente))
+    
+    emergente.mainloop()
+
+
+#Funcion que nos permite ver en detalle el partido seleccionado en el treeview
 def detalle_partido():
-    pass
+    try:
+        
+        #Obtenemos el indice del registro del treeview seleccionado
+        indice=int(tree.selection()[0])
+        #Obtenemos asi el codigo del desplazamiento de ese registro
+        cod_desplazamiento=tree.item(indice,"values")[0]
+
+        #Obtenemos los datos del equipo llamando a datos_sobre_equipo y pasandole el codigo del desplazamiento
+        datos_equipo=objeto_consulta.datos_sobre_equipo(cod_desplazamiento)
+        #Obtenemos los datos de la temporada llamando a datos_temporada y pasandole el codigo del desplazamiento
+        datos_competicion_temporada=objeto_consulta.datos_temporada(cod_desplazamiento)
+        #Obtenemos los datos historicos de la competicion llamando a datos_historico y pasandole el codigo del desplazamiento
+        datos_competicion_historico=objeto_consulta.datos_historico(cod_desplazamiento)
+
+        #Obtenemos los datos totales que nos interesan del partido del cual se ha realizado el desplazamiento llamando a datos_totales_partido
+        datos_partido_completo=objeto_consulta.datos_totales_partido(cod_desplazamiento)
+
+        #Creamos una ventana para mostrar todos estos datos consultados
+        detalle_partido=Toplevel()
+        detalle_partido.geometry("500x630")
+        detalle_partido.title("Detalle del Partido")
+        detalle_partido.resizable(0,0)
+
+        #Creamos un frame general para poner los widgets
+        frame=Frame(detalle_partido, bg="#c78be7")
+        frame.pack(fill="both", expand=True)
+
+        #Cogemos el equipo obtenido para poner su escudo
+        equipo=datos_partido_completo[3]
+        path=os.getcwd() 
+        path_imagenes=os.path.join(path,"Archivos Extra\Equipos")
+        imagen=[path_imagenes+"\\"+i for i in os.listdir(path_imagenes) if re.search(equipo,i)]
+        escudo=PhotoImage(file=imagen[0])
+        label_escudo=Label(frame, image=escudo, bg="#c78be7")
+        label_escudo.pack(pady=(10,7))
+        #Hacemos que el escudo pueda ejecutar una funcion (la de poner los datos de ese equipo) al pulsarlo
+        titulo_equipo="Datos del Club"
+        lista_texto_equipos=["Equipo", "Pais", "Fundacion", "Ligas", "Champions", "Goleador", "Apariciones"]
+        label_escudo.bind("<Button-1>", lambda e: poner_datos_emergentes(datos_equipo, titulo_equipo, lista_texto_equipos,e))
+        label_escudo.config(cursor="hand2")
+
+        #Cogemos el nombre de la competicion
+        competicion=datos_partido_completo[4]
+        #Si no es La Liga, ampliamos la ventana
+        if competicion!="La Liga":
+            detalle_partido.geometry("660x650")
+        label_competi=Label(frame, text=competicion, bg="#c78be7", font=("Helvetica",40, "bold"))
+        label_competi.pack(pady=(10,5))
+        #Hacemos que el texto de la competicion pueda ejecutar una funcion (la de poner los datos de esa competicion) al pulsarlo
+        titulo_historico="Historico de la Competicion"
+        lista_texto_historico=["Liga","Equipo","Participaciones", "Victorias", "Derrotas"]
+        label_competi.bind("<Button-1>", lambda e: poner_datos_emergentes(datos_competicion_historico, titulo_historico, lista_texto_historico, e))
+        label_competi.config(cursor="hand2")
+
+        #Cogemos la temporada
+        temporada=datos_partido_completo[5]
+        label_temporada=Label(frame, text="Temporada "+temporada, bg="#c78be7", font=("Times",20, "italic"))
+        label_temporada.pack(pady=(2,10))
+        #Hacemos que el texto de la temporada pueda ejecutar una funcion (la de poner los datos de esa temporada) al pulsarlo
+        titulo_temporada="Datos de la Competicion Actual"
+        lista_texto_temporada=["Competicion", "Temporada", "Equipos", "Campeon", "Pichichi", "Goles"]
+        label_temporada.bind("<Button-1>", lambda e: poner_datos_emergentes(datos_competicion_temporada, titulo_temporada, lista_texto_temporada,e))
+        label_temporada.config(cursor="hand2")
+
+        #Creamos un frame para poner las fechas
+        frame_fecha=Frame(frame,bg="#c78be7")
+        frame_fecha.pack()
+
+        #Cogemos la fecha del partido y le damos la forma que queremos
+        fecha=datos_partido_completo[0].strftime("%d/%m/%Y")
+        label_fecha=Label(frame_fecha, text="Fecha: "+fecha, bg="#c78be7", font=("Times",20))
+        label_fecha.grid(row=0, column=0,pady=5, padx=15)
+
+        #Cogemos la hora del partido
+        hora=datos_partido_completo[1] 
+        label_hora=Label(frame_fecha, text="Hora: "+hora, bg="#c78be7", font=("Times",20))
+        label_hora.grid(row=0, column=1,pady=5, padx=15)
+
+        #Cogemos el resultado del partido
+        resultado=datos_partido_completo[2]
+        label_result=Label(frame, text="Resultado", bg="#c78be7", font=("Arial Baltic",30))
+        label_result.pack(pady=(10,2))
+        label_resultado=Label(frame, text=resultado, bg="#c78be7", font=("Helvetica",30,"italic"))
+        label_resultado.pack()
+
+        detalle_partido.mainloop()
+
+    #Si no seleccionas ningun partido te lanza un mensaje de warning
+    except:
+        
+        messagebox.showwarning("ATENCIÓN!!!", "Debes seleccionar uno de las ciudades para poder verla en detalle.")
+
+
 
 #Funcion para confirmar la insercion del registro del desplazamiento
 def confirmacion_insertar(entryp, c1, c2, entry3, entry4, nueva_ventana):
@@ -59,6 +196,7 @@ def confirmacion_insertar(entryp, c1, c2, entry3, entry4, nueva_ventana):
             except:
                 messagebox.showwarning("ATENCIÓN!!!", "Algo falló. Que raro.")
 
+    #Si no introduces todos los parametros te lanza un mensaje de warning
     else:
         messagebox.showwarning("ATENCIÓN!!!", "Debes introducir todos los parametros.")
 
@@ -71,10 +209,11 @@ def insertar():
     nueva_ventana.title("¡¡Desplazamiento nuevo!!")
     nueva_ventana.geometry("750x670")
     
-    #Creamos el frame donde va el titulo
+    #Creamos el frame donde van a ir los widgets
     frame1=Frame(nueva_ventana, bg="lightgreen")
     frame1.pack(fill="both", expand=True)
     
+    #Ponemos un titulo a la ventana
     lb=Label(frame1, text=f"AGREGA LOS DATOS DEL DESPLAZAMIENTO",bg="lightgreen", font=("Helvetica", 20, "bold"))
     lb.pack(pady=10)
     
