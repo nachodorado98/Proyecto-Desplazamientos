@@ -134,4 +134,17 @@ class Consulta():
 
 		return self.cursor.fetchone()
 
+	#Funcion que nos permite obtener todos los datos necesarios del detalle del desplazamiento
+	def datos_completos_desplazamiento(self, desplazamiento):
+		self.cursor.execute("""USE futbol""")
+		self.cursor.execute("""SELECT d.FechaIda,d.FechaVuelta,d.Acompañamiento,d.Transporte,e.Nombre, e.Pais, e.Ciudad, e.Latitud, e.Longitud, e.Capacidad,p.Equipo 
+               FROM desplazamientos d
+               JOIN partidos p
+               ON d.CodPartido=p.CodPartido
+               JOIN estadios e
+               ON e.CodEstadio=p.CodEstadio
+               WHERE d.CodDesplazamiento=%s""",
+                (desplazamiento,))
+
+		return self.cursor.fetchone()
 		

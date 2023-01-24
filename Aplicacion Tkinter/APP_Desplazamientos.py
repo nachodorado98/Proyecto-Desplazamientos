@@ -5,8 +5,13 @@ from tkcalendar import *
 from tkinter import messagebox
 import os
 import re
+from datetime import datetime, date
+import datetime
+import tkintermapview as tm
+import pyperclip
 #Importamos la clase Consulta para realizar todas las consultas a la BBDD
 from consultas import Consulta
+
 
 #Objeto que nos permite realizar las consultas a la BBDD futbol
 objeto_consulta=Consulta()
@@ -20,8 +25,115 @@ root.resizable(0,0)
 def ver_mapa():
     pass
 
+
+
+
+#Funcion que nos permite obtener el desplazamiento y verlo en detalle
 def detalle_desplazamiento():
-    pass
+    try:
+    
+        #Obtenemos el indice del registro del treeview seleccionado
+        indice=int(tree.selection()[0])
+        #Obtenemos asi el codigo del desplazamiento de ese registro
+        desplazamiento=tree.item(indice,"values")[0]
+
+        #Obtenemos los datos del viaje que queremos ver en detalle con la funcion datos_completos_desplazamiento
+        datos_viaje=objeto_consulta.datos_completos_desplazamiento(desplazamiento)
+        
+        #Creamos la ventana del desplazamiento
+        ventana_viaje=Toplevel()
+        ventana_viaje.geometry("480x800")
+        ventana_viaje.title("Descripcion del Viaje")
+        ventana_viaje.resizable(0,0)
+
+        #Creamos un frame para poner el nombre e imagen del estadio
+        frame=Frame(ventana_viaje, bg="pink")
+        frame.pack(fill="both", expand=True)
+
+        #Obtenemos el nombre del estadio
+        estadio=datos_viaje[4]
+        #Si el nombre del estadio es muy largo, modificamos el tamaño de la fuente
+        if len(estadio)<20:
+            
+            letras_nombre_estadio=("Helvetica",40, "bold")
+        else:
+            letras_nombre_estadio=("Helvetica",33, "bold")
+        label_estadio=Label(frame, text=estadio,bg="pink", font=letras_nombre_estadio)
+        label_estadio.pack(pady=10)
+
+        #Obtenemos el nombre del equipo para poner la imagen del estadio
+        estadio_img=datos_viaje[10]
+        path=os.getcwd() 
+        path_imagenes=os.path.join(path,"Archivos Extra\Estadios")
+        imagen=[path_imagenes+"\\"+i for i in os.listdir(path_imagenes) if re.search(estadio_img,i)]
+        imagen_estadio=PhotoImage(file=imagen[0])
+        label_img_est=Label(frame, image=imagen_estadio, bg="pink")
+        label_img_est.pack(pady=(10,7))
+
+        #Creamos un frame para poner la localizacion del desplazamiento
+        frame_pais=Frame(frame, bg="pink")
+        frame_pais.pack(pady=10)
+
+        #Obtenemos el pais del desplazamiento
+        pais=datos_viaje[5].lower()
+        path_pais=os.path.join(path,"Archivos Extra\Banderas")
+        imagen_pais=[path_pais+"\\"+i for i in os.listdir(path_pais) if re.search(pais,i)]
+        pais_img=PhotoImage(file=imagen_pais[0])
+        label_pais=Label(frame_pais, image=pais_img, bg="pink")
+        label_pais.grid(row=0, column=0,pady=5)
+
+        #Obtenemos el nombre de la ciudad del desplazamiento
+        ciudad=datos_viaje[6]
+        label_ciudad=Label(frame_pais, text=ciudad,bg="pink",font=("Arial Baltic",30,"bold"))
+        label_ciudad.grid(row=0, column=1,pady=5,padx=15)
+
+        #Obtenemos la fecha de ida y de vuelta y le damos la forma que queremos
+        ida=datos_viaje[0].strftime("%d/%m/%Y")
+        vuelta=datos_viaje[1].strftime("%d/%m/%Y")
+        label_fecha=Label(frame, text=ida+" - "+vuelta, bg="pink",font=("Times",20))
+        label_fecha.pack()
+
+        #Creamos un frame para el acompañante y el medio de transporte
+        frame_varios=Frame(frame, bg="pink")
+        frame_varios.pack(pady=10)
+
+        #Obtenemos el acompañante
+        acomp=datos_viaje[2]
+        label_acompanamiento=Label(frame_varios, text=acomp, bg="pink",font=("Helvetica",20))
+        label_acompanamiento.grid(row=0, column=0, padx=20)
+
+        #Obtenemos el medio de transporte
+        trans=datos_viaje[3].lower()
+        #Cambiamos la seleccion del tren/ave a ave para una facil obtencion de la imagen
+        if trans=="tren/ave":
+            trans="ave"
+        path_trans=os.path.join(path,"Archivos Extra\Transporte")
+        imagen_t=[path_trans+"\\"+i for i in os.listdir(path_trans) if re.search(trans,i)]
+        imagen_trans=PhotoImage(file=imagen_t[0])
+        label_transporte=Label(frame_varios, image=imagen_trans, bg="pink",font=("Helvetica",20))
+        label_transporte.grid(row=0, column=1, padx=20)
+
+        #Obtenemos la latitud y longitud del estadio del desplazamiento
+        lat=datos_viaje[7]
+        lon=datos_viaje[8]
+
+        try:
+            #Creamos un widget mapa
+            mapita=tm.TkinterMapView(frame, height=200, width=400, corner_radius=0)
+            mapita.pack()
+            #Lo iniciamos con una posicion concreta (la del estadio) y un zoom
+            mapita.set_position(float(lat),float(lon), marker=True)
+            mapita.set_zoom(16)
+        except:
+            pass
+
+        ventana_viaje.mainloop()
+
+    #Si no seleccionas ningun desplazamiento te lanza un mensaje de warning
+    except:
+
+        messagebox.showwarning("ATENCIÓN!!!", "Debes seleccionar uno de los viajes para poder verlo en detalle.")
+
 
 
 #Funcion que pasado un tiempo, nos destruye la ventana
