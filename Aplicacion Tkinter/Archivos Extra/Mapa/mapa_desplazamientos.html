@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_5902f931b32bd3535973584afbf53015 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_5902f931b32bd3535973584afbf53015" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_5902f931b32bd3535973584afbf53015 = L.map(
+                "map_5902f931b32bd3535973584afbf53015",
+                {
+                    center: [40.5, -3.25],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 3,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_f769681558b030fe214f59b701f2f2e9 = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_5902f931b32bd3535973584afbf53015);
+        
+    
+
+        function geo_json_f6d13901b3f3a5ea10639f62ef95213f_onEachFeature(feature, layer) {
+            layer.on({
+            });
+        };
+        var geo_json_f6d13901b3f3a5ea10639f62ef95213f = L.geoJson(null, {
+                onEachFeature: geo_json_f6d13901b3f3a5ea10639f62ef95213f_onEachFeature,
+            
+        });
+
+        function geo_json_f6d13901b3f3a5ea10639f62ef95213f_add (data) {
+            geo_json_f6d13901b3f3a5ea10639f62ef95213f
+                .addData(data)
+                .addTo(map_5902f931b32bd3535973584afbf53015);
+        }
+            geo_json_f6d13901b3f3a5ea10639f62ef95213f_add({"bbox": [-9.526571, 35.94685, 3.039484, 43.748338], "features": [{"bbox": [-9.392884, 35.94685, 3.039484, 43.748338], "geometry": {"coordinates": [[[-9.034818, 41.880571], [-8.984433, 42.592775], [-9.392884, 43.026625], [-7.97819, 43.748338], [-6.754492, 43.567909], [-5.411886, 43.57424], [-4.347843, 43.403449], [-3.517532, 43.455901], [-1.901351, 43.422802], [-1.502771, 43.034014], [0.338047, 42.579546], [0.701591, 42.795734], [1.826793, 42.343385], [2.985999, 42.473015], [3.039484, 41.89212], [2.091842, 41.226089], [0.810525, 41.014732], [0.721331, 40.678318], [0.106692, 40.123934], [-0.278711, 39.309978], [0.111291, 38.738514], [-0.467124, 38.292366], [-0.683389, 37.642354], [-1.438382, 37.443064], [-2.146453, 36.674144], [-3.415781, 36.6589], [-4.368901, 36.677839], [-4.995219, 36.324708], [-5.37716, 35.94685], [-5.866432, 36.029817], [-6.236694, 36.367677], [-6.520191, 36.942913], [-7.453726, 37.097788], [-7.537105, 37.428904], [-7.166508, 37.803894], [-7.029281, 38.075764], [-7.374092, 38.373059], [-7.098037, 39.030073], [-7.498632, 39.629571], [-7.066592, 39.711892], [-7.026413, 40.184524], [-6.86402, 40.330872], [-6.851127, 41.111083], [-6.389088, 41.381815], [-6.668606, 41.883387], [-7.251309, 41.918346], [-7.422513, 41.792075], [-8.013175, 41.790886], [-8.263857, 42.280469], [-8.671946, 42.134689], [-9.034818, 41.880571]]], "type": "Polygon"}, "id": "49", "properties": {"id": "ESP", "name": "Spain"}, "type": "Feature"}, {"bbox": [-9.526571, 36.838269, -6.389088, 42.280469], "geometry": {"coordinates": [[[-9.034818, 41.880571], [-8.671946, 42.134689], [-8.263857, 42.280469], [-8.013175, 41.790886], [-7.422513, 41.792075], [-7.251309, 41.918346], [-6.668606, 41.883387], [-6.389088, 41.381815], [-6.851127, 41.111083], [-6.86402, 40.330872], [-7.026413, 40.184524], [-7.066592, 39.711892], [-7.498632, 39.629571], [-7.098037, 39.030073], [-7.374092, 38.373059], [-7.029281, 38.075764], [-7.166508, 37.803894], [-7.537105, 37.428904], [-7.453726, 37.097788], [-7.855613, 36.838269], [-8.382816, 36.97888], [-8.898857, 36.868809], [-8.746101, 37.651346], [-8.839998, 38.266243], [-9.287464, 38.358486], [-9.526571, 38.737429], [-9.446989, 39.392066], [-9.048305, 39.755093], [-8.977353, 40.159306], [-8.768684, 40.760639], [-8.790853, 41.184334], [-8.990789, 41.543459], [-9.034818, 41.880571]]], "type": "Polygon"}, "id": "130", "properties": {"id": "PRT", "name": "Portugal"}, "type": "Feature"}], "type": "FeatureCollection"});
+
+        
+    
+            var marker_867ed9eb9f11457e6c52c007ff159573 = L.marker(
+                [37.3564, -5.98175],
+                {}
+            ).addTo(map_5902f931b32bd3535973584afbf53015);
+        
+    
+        var popup_f39b0a508422e59f99f116cd4e5be1b2 = L.popup({"maxWidth": 500});
+
+        
+            
+                var html_287fe4beee434af1f614595e0ca4ef7a = $(`<div id="html_287fe4beee434af1f614595e0ca4ef7a" style="width: 100.0%; height: 100.0%;"><h1>Sevilla</h1><h3>23/10/2022 - 24/10/2022</h3></div>`)[0];
+                popup_f39b0a508422e59f99f116cd4e5be1b2.setContent(html_287fe4beee434af1f614595e0ca4ef7a);
+            
+        
+
+        marker_867ed9eb9f11457e6c52c007ff159573.bindPopup(popup_f39b0a508422e59f99f116cd4e5be1b2)
+        ;
+
+        
+    
+    
+            marker_867ed9eb9f11457e6c52c007ff159573.bindTooltip(
+                `<div>
+                     Sevilla
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_3b82df8aed589fdb2ca35074070c17aa = L.marker(
+                [41.1618, -8.58382],
+                {}
+            ).addTo(map_5902f931b32bd3535973584afbf53015);
+        
+    
+        var popup_52a7dc377aa3e61156ba7dc8782f3b09 = L.popup({"maxWidth": 500});
+
+        
+            
+                var html_c358cb05d2d8ded6eb20ba2775697a07 = $(`<div id="html_c358cb05d2d8ded6eb20ba2775697a07" style="width: 100.0%; height: 100.0%;"><h1>Porto</h1><h3>31/10/2022 - 02/11/2022</h3></div>`)[0];
+                popup_52a7dc377aa3e61156ba7dc8782f3b09.setContent(html_c358cb05d2d8ded6eb20ba2775697a07);
+            
+        
+
+        marker_3b82df8aed589fdb2ca35074070c17aa.bindPopup(popup_52a7dc377aa3e61156ba7dc8782f3b09)
+        ;
+
+        
+    
+    
+            marker_3b82df8aed589fdb2ca35074070c17aa.bindTooltip(
+                `<div>
+                     Porto
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_b3d5a4b623e904780efb9a3c0b1a45ac = L.marker(
+                [43.3606, -5.87026],
+                {}
+            ).addTo(map_5902f931b32bd3535973584afbf53015);
+        
+    
+        var popup_4e3a89aab97f92b784443f5023fb0aa9 = L.popup({"maxWidth": 500});
+
+        
+            
+                var html_46af65e641e728e7ea094f05c35fcc57 = $(`<div id="html_46af65e641e728e7ea094f05c35fcc57" style="width: 100.0%; height: 100.0%;"><h1>Oviedo</h1><h3>04/01/2023 - 05/01/2023</h3></div>`)[0];
+                popup_4e3a89aab97f92b784443f5023fb0aa9.setContent(html_46af65e641e728e7ea094f05c35fcc57);
+            
+        
+
+        marker_b3d5a4b623e904780efb9a3c0b1a45ac.bindPopup(popup_4e3a89aab97f92b784443f5023fb0aa9)
+        ;
+
+        
+    
+    
+            marker_b3d5a4b623e904780efb9a3c0b1a45ac.bindTooltip(
+                `<div>
+                     Oviedo
+                 </div>`,
+                {"sticky": true}
+            );
+        
+</script>
+</html>

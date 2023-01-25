@@ -147,4 +147,17 @@ class Consulta():
                 (desplazamiento,))
 
 		return self.cursor.fetchone()
+
+	#Funcion que nos permite obtener los datos necesarios para el mapa del mundo
+	def puntos_mapa(self):
+		self.cursor.execute("""USE futbol""")
+		self.cursor.execute("""SELECT e.Latitud, e.Longitud, d.CodDesplazamiento, e.Ciudad, d.FechaIda, d.FechaVuelta, e.Pais
+                   FROM desplazamientos d
+                   JOIN partidos p
+                   ON d.CodPartido=p.CodPartido
+                   JOIN estadios e
+                   ON e.CodEstadio=p.CodEstadio""")
+
+		return self.cursor.fetchall()
+
 		

@@ -9,6 +9,11 @@ from datetime import datetime, date
 import datetime
 import tkintermapview as tm
 import pyperclip
+import webbrowser
+import folium
+import geopandas as gpd
+from translate import Translator
+import time
 #Importamos la clase Consulta para realizar todas las consultas a la BBDD
 from consultas import Consulta
 
@@ -22,11 +27,48 @@ root.title("APP Desplazamientos")
 root.geometry("1550x830")
 root.resizable(0,0)
 
+
+#Funcion que nos permite ver los desplazamientos en un mapa del mundo
 def ver_mapa():
-    pass
 
-
-
+    #Obtenemos los datos para crear el mapa de los desplazamientos llamando a puntos_mapa
+    datos_para_mapa=objeto_consulta.puntos_mapa()
+    #Obtenemos los datos para el marcador
+    datos_numero=[(float(i[0]), float(i[1]), i[2], i[3], i[4], i[5]) for i in datos_para_mapa]
+    #Obtenemos los paises que tendra el mapa (de manera unica)
+    paises_unicos=set([i[6] for i in datos_para_mapa])
+    
+    #Traducimos el nombre del pais de castellano al ingles
+    traductor=Translator(from_lang="spanish", to_lang="english")
+    paises_unicos_ing=[traductor.translate(i) for i in paises_unicos]
+    
+    #Leemos el archivo geojson de los paises del mundo con geopnadas
+    paths=os.getcwd() 
+    path_mapa=os.path.join(paths,"Archivos Extra\Mapa\world-countries.json")
+    gdf=gpd.read_file(path_mapa)
+    
+    #Obtenemos el geodataframe que tenga los paises que tenemos nosotros en ingles
+    data_buena=gdf[gdf["name"].isin(paises_unicos_ing)]
+    
+    #Creamos un mapa con una localizacion inicial cualquiera y un zoom
+    mapa=folium.Map(location=[40.5, -3.25], zoom_start=3)
+    
+    #Agregamos al mapa los paises del geodataframe
+    folium.GeoJson(data_buena, name="desplazamientos").add_to(mapa)
+    
+    #Generamos tantos marcadores como desplazamientos hayamos realizado
+    for i in datos_numero:
+        #Le damos formato a la fecha de ida y de vuelta
+        ida=i[4].strftime("%d/%m/%Y")
+        vuelta=i[5].strftime("%d/%m/%Y")
+        #Creamos el marcador de la ubicacion del desplazamiento (estadio) y un mensaje emergente con la fecha utilizando etiquetas HTML
+        folium.Marker([i[0], i[1]], tooltip=f"{i[3]}", popup=folium.Popup(f"<h1>{i[3]}</h1><h3>{ida} - {vuelta}</h3>", max_width=500)).add_to(mapa)
+    
+    #Guardamos el mapa
+    mapa.save(os.path.join(paths,"Archivos Extra\Mapa\mapa_desplazamientos.html"))
+    #Abrimos el mapa con el navegador
+    webbrowser.open_new(os.path.join(paths,"Archivos Extra\Mapa\mapa_desplazamientos.html"))
+    
 
 #Funcion que nos permite obtener el desplazamiento y verlo en detalle
 def detalle_desplazamiento():
