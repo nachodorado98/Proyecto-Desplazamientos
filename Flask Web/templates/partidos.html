@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block titulo %}
+
+<div style="background-color: #f31e17;">
+  <br>
+  <center style="background-color: #f31e17;">
+    <h1 style="background-color: #f31e17; color: #ffffff; font-size: 500%; font-family: times;">
+      PARTIDOS ATLÉTICO DE MADRID
+    </h1>
+  <br>
+</div>
+
+{% endblock %}
+
+
+{% block cuerpo %}
+<div style="background-color: #f31e17;">
+  <br>
+  <center>
+    <img src="{{ url_for('static', filename='calderon.png') }}" alt="Logo" width="550" height="300.5">
+  <br><br>
+  <table class="table table-striped" style="border: 1px solid black; text-align: center; width: 1400px;">
+  <thead class="thead-dark" style="background-color: #bab3b3;">
+    <tr>
+      <th scope="col" style="border: 1px solid black; width:15%">
+      	<img src="{{ url_for('static', filename='icono_atleti.png') }}" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
+      </th>
+      <th scope="col" style="border: 1px solid black; font-size: 130%; font-family: times; width:1%">Resultado</th>
+      <th scope="col" style="border: 1px solid black; font-size: 130%; font-family: times; width:15%">Equipo Rival</th>
+      <th scope="col" style="border: 1px solid black; font-size: 130%; font-family: times; width:9.5%">Fecha</th>
+      <th scope="col" style="border: 1px solid black; font-size: 130%; font-family: times; width:1%">Hora</th>
+      <th scope="col" style="border: 1px solid black; font-size: 130%; font-family: times; width:14%">Árbitro</th>
+      <th scope="col" style="border: 1px solid black; font-size: 130%; font-family: times; width:18%">Estadio</th>
+      <th scope="col" style="border: 1px solid black; font-size: 130%; font-family: times; width:14%">Competición</th>
+      <th scope="col" style="border: 1px solid black; font-size: 130%; font-family: times; width:8%">Temporada</th>
+    </tr>
+  </thead>
+  <tbody>
+  	{% for i in datos_partidos %}
+  	<tr style="height:20px;">
+      <td style="background-color: #f67671; padding: 15px;"><strong>{{ i.0 }}</strong></td>
+      <td style="background-color: #ffffff; padding: 15px;"><strong>{{ i.1 }}</strong></td>
+      <td style="background-color: #f67671; padding: 15px;"><strong>{{ i.2 }}</strong></td>
+      <td style="background-color: #ffffff; padding: 15px;"><strong>{{ i.3 }}</strong></td>
+      <td style="background-color: #f67671; padding: 15px;"><strong>{{ i.4 }}</strong></td>
+      <td style="background-color: #ffffff; padding: 15px;"><strong>{{ i.5 }}</strong></td>
+      <td style="background-color: #f67671; padding: 15px;"><strong>{{ i.6 }}</strong></td>
+      <td style="background-color: #ffffff; padding: 10px;"><strong>{{ i.7 }}</strong></td>
+      <td style="background-color: #f67671; padding: 15px;"><strong>{{ i.8 }}</strong></td>
+    </tr>
+	{% endfor %}
+  </tbody>
+  </table>
+  </center>
+</div>
+
+{% endblock %}
+
+{% block pie %}
+{% endblock %}

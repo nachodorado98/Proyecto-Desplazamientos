@@ -5,13 +5,13 @@
   <div class="col-8">
     <nav class="navbar navbar-expand-lg bg-body-tertiary" style="background-color: #f31e17;">
   <div class="container-fluid">
-      <a class="navbar-brand" href="#" style="padding: 5px 7px;">
+      <a class="navbar-brand" href="{{ url_for('inicio') }}" style="padding: 5px 7px;">
         <img src="{{ url_for('static', filename='icono_bandera.png') }}" alt="Logo" width="90" height="50" class="d-inline-block align-text-top">
       </a>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#" style="color: #ffffff; font-size:25px; padding: 5px 12px;">
+          <a class="nav-link active" aria-current="page" href="{{ url_for('desplazamientos') }}" style="color: #ffffff; font-size:25px; padding: 5px 12px;">
             Desplazamientos
           </a>
         </li>
@@ -21,7 +21,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#" style="color: #ffffff; font-size:25px; padding: 5px 12px;">
+          <a class="nav-link" href="{{ url_for('partidos') }}" style="color: #ffffff; font-size:25px; padding: 5px 12px;">
             Partidos
           </a>
         </li>
@@ -44,15 +44,59 @@
 </div>
 
 {% block titulo %}
+
 <div style="background-color: #f31e17;">
   <br>
   <center style="background-color: #f31e17;">
-    <h1 style="background-color: #f31e17; color: #ffffff; font-size: 600%; font-family: times;">
+    <h1 style="background-color: #f31e17;">
       <img src="{{ url_for('static', filename='letrero_atm.png') }}" alt="Logo" width="1000" height="164">
     </h1>
   <br>
 </div>
+
 {% endblock %}
 
+{% block cuerpo %}
+
+<center>
+<div class="row" style="background-color: #f31e17;">
+  <div class="col-4">
+    <img src="{{ url_for('static', filename='icono_atleti.png') }}" alt="Logo" width="400" height="400">
+  </div>
+  <div class="col-4">
+    <br>
+    <br>
+    <div style="padding: 5px 7px;">
+      <center>
+        <form action="#" method="POST" id="form1">
+          <div class="col-md-5">
+            <input type="text" class="form-control" name="usuario" placeholder="Usuario" autocomplete="off">
+          </div>
+          <br>
+          <div class="col-md-5">
+            <input type="password" class="form-control" name="contrasena" placeholder="Contraseña">
+          </div>
+          <br>
+          <button type="submit" class="btn btn-primary">Aceptar</button>
+        </form>
+        <hr>
+        <p id="Help" style="color: #ffffff;">¿No tienes cuenta?&emsp;
+          <a href="#" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">
+            Registrate
+          </a>
+        </p>
+        </center>
+      </div>
+    </div>
+    <div class="col-4">
+      <img src="{{ url_for('static', filename='icono_1903.png') }}" alt="Logo" width="400" height="400">
+    </div>
+</div>
+</center>
+
+{% endblock %}
+
+{% block pie %}
+{% endblock %}
 
 <html>

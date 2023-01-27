@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block titulo %}
+
+<div style="background-color: #f31e17;">
+  <br>
+  <center style="background-color: #f31e17;">
+    <h1 style="background-color: #f31e17; color: #ffffff; font-size: 500%; font-family: times;">DESPLAZAMIENTOS ON TOUR</h1>
+  <br>
+</div>
+
+{% endblock %}
+{% block cuerpo %}
+<div style="background-color: #f31e17;">
+  <br>
+  <center>
+    <img src="{{ url_for('static', filename='avion.png') }}" alt="Logo" width="280" height="237">
+<table class="table" style="border: 1px solid black; border-collapse: collapse; text-align: center; width: 1400px;">
+  <thead class="thead-dark" style="background-color: #bab3b3;">
+    <tr>
+      <th scope="col" style="border: 1px solid black; font-size: 130%; font-family: times; width:15%">Desplazamiento</th>
+      <th scope="col" style="border: 1px solid black; font-size: 130%; font-family: times; width:15%">Fecha Ida</th>
+      <th scope="col" style="border: 1px solid black; font-size: 130%; font-family: times; width:15%">Fecha Vuelta</th>
+      <th scope="col" style="border: 1px solid black; font-size: 130%; font-family: times;width:15%">Equipo</th>
+      <th scope="col" style="border: 1px solid black; font-size: 130%; font-family: times;width:15%">Acompañamiento</th>
+      <th scope="col" style="border: 1px solid black; font-size: 130%; font-family: times;width:15%">Transporte</th>
+    </tr>
+  </thead>
+  <tbody>
+  	{% for i in datos_desplazamientos %}
+  	<tr style="height:40px;">
+      <td style="background-color: #ffffff;">
+      <a href="#"><button type="button" class="btn btn-outline-danger">{{ i.0 }}</button></a>
+      </td>
+      <td style="background-color: #f67671; padding: 15px;"><strong>{{ i.1 }}</strong></td>
+      <td style="background-color: #ffffff; padding: 15px;"><strong>{{ i.2 }}</strong></td>
+      <td style="background-color: #f67671; padding: 15px;"><strong>{{ i.3 }}</strong></td>
+      <td style="background-color: #ffffff; padding: 15px;"><strong>{{ i.4 }}</strong></td>
+      <td style="background-color: #f67671; padding: 15px;"><strong>{{ i.5 }}</strong></td>
+    </tr>
+	{% endfor %}
+  </tbody>
+</table>
+</center>
+</div> 
+{% endblock %}
+{% block pie %}
+{% endblock %}
