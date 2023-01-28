@@ -4,7 +4,6 @@ from config import Config
 from datetime import datetime, date
 
 
-
 #Clase para realizar las consultas
 class Consulta():
 	#Creamos la conexion con la BBDD
@@ -32,6 +31,74 @@ class Consulta():
                     		JOIN competiciones c
                     		ON p.CodCompeticion=c.CodCompeticion
                     		ORDER BY Fecha""")
+		return self.cursor.fetchall()
+
+	#Funcion que nos permite obtener los puntos del mapa
+	def puntos_mapa(self):
+		self.cursor.execute("""USE futbol""")
+		self.cursor.execute("""SELECT e.Latitud, e.Longitud, d.CodDesplazamiento, e.Ciudad, d.FechaIda, d.FechaVuelta, e.Pais
+                   FROM desplazamientos d
+                   JOIN partidos p
+                   ON d.CodPartido=p.CodPartido
+                   JOIN estadios e
+                   ON e.CodEstadio=p.CodEstadio""")
+
+		return self.cursor.fetchall()
+
+
+
+#Clase para realizar las consultas de estadistica
+class Estadistica(Consulta):
+
+	#Funcion que nos permite obtener los nombres de los estadios de manera unica en donde se han jugado a excepcion del Metropolitano
+	def estadios_jugados(self):
+		self.cursor.execute("""USE futbol""")
+		self.cursor.execute("""SELECT DISTINCTROW(e.Nombre)
+                 FROM partidos p
+                 JOIN estadios e
+                 ON p.CodEstadio=e.CodEstadio
+                 WHERE e.Nombre!='Wanda Metropolitano'
+                 ORDER BY e.Nombre""")
+
+		return self.cursor.fetchall()
+
+	#Funcion que nos permite obtener los nombres de los estadios que se han visitado de manera unica
+	def estadios_visitados(self):
+		self.cursor.execute("""USE futbol""")
+		self.cursor.execute("""SELECT DISTINCTROW(e.Nombre)
+                 FROM partidos p
+                 JOIN estadios e
+                 ON p.CodEstadio=e.CodEstadio
+                 JOIN desplazamientos d
+                 ON d.CodPartido=p.CodPartido
+                 ORDER BY e.Nombre""")
+
+		return self.cursor.fetchall()
+
+	#Funcion que nos permite obtener el estadio mas visitado y el numero de veces
+	def mas_visitado(self):
+		self.cursor.execute("""USE futbol""")
+		self.cursor.execute("""SELECT e.Nombre, COUNT(e.Nombre) as NumeroVeces
+                 FROM partidos p
+                 JOIN estadios e
+                 ON p.CodEstadio=e.CodEstadio
+                 JOIN desplazamientos d
+                 ON d.CodPartido=p.CodPartido
+                 GROUP BY e.Nombre
+                 ORDER BY NumeroVeces""")
+
+		return self.cursor.fetchall()
+
+	#Funcion que nos permite obtener el estadio mas grande y su capacidad (de los visitados)
+	def mas_grande(self):
+		self.cursor.execute("""USE futbol""")
+		self.cursor.execute("""SELECT e.Nombre, MAX(e.Capacidad)
+                 FROM partidos p
+                 JOIN estadios e
+                 ON p.CodEstadio=e.CodEstadio
+                 JOIN desplazamientos d
+                 ON d.CodPartido=p.CodPartido""")
+
 		return self.cursor.fetchall()
 
 

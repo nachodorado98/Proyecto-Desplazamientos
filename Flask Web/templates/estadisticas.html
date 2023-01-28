@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block titulo %}
+
+<div style="background-color: #f31e17;">
+  <br>
+  <center style="background-color: #f31e17;">
+    <h1 style="background-color: #f31e17; color: #ffffff; font-size: 500%; font-family: times;">
+      ESTADÍSTICAS DESPLAZAMIENTOS
+    </h1>
+  <br>
+</div>
+
+{% endblock %}
+
+{% block cuerpo %}
+<div style="background-color: #f31e17;">
+<center>
+<div class="list-group" style="width: 1100px;">
+  <button type="button" class="list-group-item list-group-item-action" style="background-color: #ffffff;color: #f31e17;font-size: 340%; font-family: times; text-align:center">
+    <strong>ESTADIOS</strong>
+  </button>
+  <button type="button" class="list-group-item list-group-item-action" style="background-color: #ffffff;color: #f31e17;font-size: 100%; font-family: times; text-align:center">
+    <label for="estadios_v" style="color: #f31e17; font-size: 200%; font-family: calibri;">
+    <strong>Estadios Visitados: {{ estadistica1.3 }}&nbsp;</strong>
+    </label>
+    <select name="estadios_v" id="estadios_v">
+    {% for i in estadistica1.2 %}
+    <option value="{{ i.0 }}">{{ i.0 }}</option>
+    {% endfor %}
+    </select>
+    <label for="estadios" style="color: #f31e17; font-size: 200%; font-family: calibri;">
+    <strong>&emsp;Estadios Jugados: {{ estadistica1.1 }}&nbsp;</strong>
+    </label>
+    <select name="estadios" id="estadios">
+    {% for i in estadistica1.0 %}
+      <option value="{{ i.0 }}">{{ i.0 }}</option>
+    {% endfor %}
+    </select>
+    <br>
+    <br>
+    <center>
+    <div class="progress" style="width:900px; height:25px;">
+    <div class="progress-bar progress-bar-striped bg-danger" role="progressbar" style="width: 25%;" aria-valuenow="{{ porcentaje }}" aria-valuemin="0" aria-valuemax="100"><strong>{{ estadistica1.4 }}%</strong></div>
+    </div>
+    </center>
+  </button>
+  <button type="button" class="list-group-item list-group-item-action" style="background-color: #ffffff;color: #f31e17;font-size: 200%; font-family: times; text-align:center">
+    <label for="estadios_mas" style="color: #f31e17; font-size: 100%; font-family: calibri;">
+    <strong>&emsp;Estadio Más Visitado: {{ estadistica2.0 }}&nbsp;</strong>
+  </label>
+  <label for="veces" style="color: #f31e17; font-size: 100%; font-family: calibri;">
+    <strong>&emsp;Número de Veces: {{ estadistica2.1 }}&nbsp;</strong>
+  </label>
+  </button>
+  <button type="button" class="list-group-item list-group-item-action" style="background-color: #ffffff;color: #f31e17;font-size: 200%; font-family: times; text-align:center">
+    <label for="estadios_mas" style="color: #f31e17; font-size: 100%; font-family: calibri;">
+    <strong>&emsp;Estadio Más Grande: {{ estadistica3.0 }}&nbsp;</strong>
+  </label>
+  <label for="veces" style="color: #f31e17; font-size: 100%; font-family: calibri;">
+    <strong>&emsp;Capacidad: {{ estadistica3.1 }}&nbsp;</strong>
+  </label>
+  </button>
+</div>
+
+<br><br>
+
+<div class="list-group" style="width: 1100px;">
+  <button type="button" class="list-group-item list-group-item-action" style="background-color: #ffffff;color: #f31e17;font-size: 340%; font-family: times; text-align:center">
+    <strong>PARTIDOS</strong>
+  </button>
+  <button type="button" class="list-group-item list-group-item-action" style="background-color: #ffffff;color: #f31e17;font-size: 100%; font-family: times; text-align:center">
+    
+  </button>
+</div>
+
+<br><br>
+
+<div class="list-group" style="width: 1100px;">
+  <button type="button" class="list-group-item list-group-item-action" style="background-color: #ffffff;color: #f31e17;font-size: 340%; font-family: times; text-align:center">
+    <strong>EQUIPOS</strong>
+  </button>
+  <button type="button" class="list-group-item list-group-item-action" style="background-color: #ffffff;color: #f31e17;font-size: 100%; font-family: times; text-align:center">
+    
+  </button>
+</div>
+<br>
+
+
+</center>
+</div>
+
+{% endblock %}
