@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block titulo %}
+
+<div style="background-color: #f31e17;">
+  <br>
+  <center style="background-color: #f31e17;">
+    <h1 style="background-color: #f31e17; color: #ffffff; font-size: 500%; font-family: times;">
+      Bienvenido {{ usuario }}!!
+    </h1>
+  <br>
+</div>
+
+{% endblock %}
+
+
+{% block cuerpo %}
+<div style="background-color: #f31e17;">
+  <center>
+    <h2 style="background-color: #f31e17; color: #ffffff; font-size: 350%; font-family: times;">
+      Puedes acceder a los desplazamientos realizados!
+    </h2>
+    <br>
+    <div>
+      <p style="background-color: #f31e17; color: #ffffff; font-size: 250%; font-family: times;">
+        <strong>{{ correo_confirmacion }}</strong>
+      </p>
+    </div>
+    <a class="nav-link active" aria-current="page" href="{{ url_for('desplazamientos') }}" style="color: #ffffff; font-size:25px;">
+      <img src="{{ url_for('static', filename='icono_bandera.png') }}" alt="Logo" width="550" height="366.7" class="d-inline-block align-text-top">
+    </a>
+  </center>
+  <br>
+  <br>
+</div> 
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block titulo %}
+
+<div style="background-color: #f31e17;">
+  <br>
+  <center style="background-color: #f31e17;">
+    <h1 style="background-color: #f31e17; color: #ffffff; font-size: 600%; font-family: times;">
+      ON TOUR ATM
+    </h1>
+  <br>
+</div>
+
+{% endblock %}
+
+{% block cuerpo %}
+<div style="background-color: #f31e17;">
+  <center style="background-color: #f31e17;">
+    <h2 style="background-color: #f31e17; color: #ffffff; font-size: 300%; font-family: times;">
+      Regístrate para acceder a todos los desplazamientos!!
+    </h2>
+    <br>
+    {% with messages=get_flashed_messages(with_categories=True) %}
+    {% for i in messages %}
+      <div class="alert alert-warning alert-dismissible fade show" role="alert" style="width:500px">
+        <strong>{{ i.1 }}</strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    {% endfor %}
+  {% endwith %}
+    <div>
+      <form action="{{ url_for('registro_correcto') }}" method="POST" id="form1">
+        <div class="form-row">
+          <div class="form-group col-md-2">
+            <input type="text" class="form-control" name="nombre_nuevo" placeholder="Nombre" autocomplete="off">
+          </div>
+          <br>
+          <div class="form-group col-md-2">
+            <input type="text" class="form-control" name="usuario_nuevo" placeholder="Usuario" autocomplete="off">
+          </div>
+          <br>
+          <div class="form-group col-md-2">
+            <input type="password" class="form-control" name="contrasena_nueva" placeholder="Contraseña" autocomplete="off">
+          </div>
+          <br>
+          <div class="form-group col-md-2">
+            <input type="email" class="form-control" name="correo_nuevo" placeholder="Correo" autocomplete="off">
+          </div>
+        </div>
+        <br>
+        <button type="submit" class="btn btn-primary">Siguiente</button>
+      </form>
+      <hr>
+        <p id="Help" style="color: #ffffff;">¿Tienes cuenta?&emsp;
+          <a href="{{ url_for('inicio') }}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">
+            Inicia Sesión
+          </a>
+        </p>
+    </div>
+  </center>
+  <br>
+  <br>
+  <br>
+  <br>
+</div> 
+{% endblock %}

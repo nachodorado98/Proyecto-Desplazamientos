@@ -204,4 +204,19 @@ Transporte VARCHAR(50),
 PRIMARY KEY (CodDesplazamiento),
 FOREIGN KEY (CodPartido) REFERENCES partidos (CodPartido) ON DELETE CASCADE)"""
 
-creacion_tabla_desplazamientos=tabla_desplazamientos.crear_tabla(consulta_creacion_desplazamientos)
+#creacion_tabla_desplazamientos=tabla_desplazamientos.crear_tabla(consulta_creacion_desplazamientos)
+
+
+#--------------------------------------------TABLA USUARIO---------------------------------------
+#Creamos un objeto tabla para los usuarios
+tabla_usuario=Tabla("usuario", nombre_bbdd, bbdd, c)
+
+#Creamos la tabla desplazamientos
+consulta_creacion_usuario="""CREATE TABLE usuarios 
+            (CodUsuario INT AUTO_INCREMENT PRIMARY KEY,
+            Usuario VARCHAR(50),
+            Contrasena VARCHAR(50),
+            Nombre VARCHAR(50),
+            Email VARCHAR(50))"""
+
+creacion_tabla_usuario=tabla_usuario.crear_tabla(consulta_creacion_usuario)

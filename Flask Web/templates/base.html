@@ -40,7 +40,7 @@
 </nav>
 </div>
 <div class="col-4">
-<a class="nav-link" href="#" style="color: #ffffff; font-size:25px; text-align: right; padding: 40x 80px;">Cerrar Sesión</a>
+<a class="nav-link" href="{{ url_for('cerrar_sesion') }}" style="color: #ffffff; font-size:25px; text-align: right; padding: 40x 80px;">Cerrar Sesión</a>
 </div>
 </div>
 
@@ -58,8 +58,18 @@
 {% endblock %}
 
 {% block cuerpo %}
-
 <center>
+<div style="background-color: #f31e17;">
+{% with messages=get_flashed_messages(with_categories=True) %}
+  {% for i in messages %}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert" style="width:500px">
+      <strong>{{ i.1 }}</strong>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  {% endfor %}
+{% endwith %}
 <div class="row" style="background-color: #f31e17;">
   <div class="col-4">
     <img src="{{ url_for('static', filename='icono_atleti.png') }}" alt="Logo" width="400" height="400">
@@ -69,7 +79,7 @@
     <br>
     <div style="padding: 5px 7px;">
       <center>
-        <form action="#" method="POST" id="form1">
+        <form action="{{ url_for('login') }}" method="POST" id="form1">
           <div class="col-md-5">
             <input type="text" class="form-control" name="usuario" placeholder="Usuario" autocomplete="off">
           </div>
@@ -82,7 +92,7 @@
         </form>
         <hr>
         <p id="Help" style="color: #ffffff;">¿No tienes cuenta?&emsp;
-          <a href="#" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">
+          <a href="{{ url_for('registro') }}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">
             Registrate
           </a>
         </p>
@@ -92,6 +102,7 @@
     <div class="col-4">
       <img src="{{ url_for('static', filename='icono_1903.png') }}" alt="Logo" width="400" height="400">
     </div>
+</div>
 </div>
 </center>
 

@@ -1,5 +1,5 @@
 #Impotamos lo necesario de Flask
-from flask import Flask, render_template, url_for
+from flask import Flask, render_template, url_for, request, redirect, flash
 #Impotamos la clase consulta y estadistica
 from consultas import Consulta, Estadistica
 #Importamos el traductor
@@ -9,10 +9,19 @@ import os
 #Importamos lo necesario para el mapa
 import folium
 import geopandas as gpd
+#Importamos la clase administrador
+from admin import Administrador
+
 
 #Creamos los objetos para las consultas
 objeto_consulta=Consulta()
 objeto_estadistica=Estadistica()
+
+#Creamos un objeto para el administrador de usuarios
+objeto_admin=Administrador()
+
+#Inicializamos el acceso de manera global
+acceso=False
 
 #Creamos la app
 app=Flask(__name__, template_folder="templates")
@@ -23,32 +32,76 @@ app.secret_key="clave_super_secreta"
 #Creamos la funcion de la direccion de inicio
 @app.route('/')
 def inicio():
-    
-    #Devolvemos el html de la pagina inicio
-	return render_template("base.html")
+
+    global acceso
+
+    #Si has tenido acceso, puedes cerrar sesion llamando a la funcion cerrar_sesion
+    if acceso:
+        cerrar_sesion()
+
+    return render_template("base.html")
+
+#Creamos la funcion para cerrar sesion
+@app.route('/cerrar_sesion', methods=["POST", "GET"])
+def cerrar_sesion():
+
+    global acceso
+
+    #Si has tenido acceso puedes cerrar sesion
+    if acceso:
+        acceso=False
+        #Mostramos un mensaje de sesion cerrada correctamente
+        flash("Has cerrado sesion!","info")
+        #Nos devuelve a la pagina de inicio ya con la sesion cerrada
+        return redirect(url_for('inicio'))
+    #Si no has tenido acceso, sigues sin tener  y te devuelve a la pagina de inicio
+    else:
+        #Mostramos un mensaje de acceso denegado sin iniciar sesion
+        flash("No puedes cerrar sesion sin antes haberla iniciado!!","error")
+        return redirect(url_for('inicio'))
 
 #Creamos la funcion de la direccion de desplazamientos
 @app.route('/desplazamientos')
 def desplazamientos():
 
-    #Obtenemos los datos de los desplazamientos llamando a consulta_desplazamientos
-    datos_desplazamientos=objeto_consulta.consulta_desplazamientos()
-    #Devolvemos el html de la pagina desplazamientos
-    return render_template("desplazamientos.html",datos_desplazamientos=datos_desplazamientos)
+    global acceso
+    
+    #Si tienes acceso puedes ver los desplazamientos
+    if acceso:
+        #Obtenemos los datos de los desplazamientos llamando a consulta_desplazamientos
+        datos_desplazamientos=objeto_consulta.consulta_desplazamientos()
+        #Devolvemos el html de la pagina desplazamientos
+        return render_template("desplazamientos.html",datos_desplazamientos=datos_desplazamientos)
+    #Si no has tenido acceso, sigues sin tener y te devuelve a la pagina de inicio
+    else:
+        #Mostramos un mensaje de acceso denegado sin iniciar sesion
+        flash("Para poder acceder debes iniciar sesion primero!!","error")
+        return redirect(url_for('inicio'))
 
 #Creamos la funcion de la direccion de partidos
 @app.route('/partidos')
 def partidos():
 
-    #Obtenemos los datos de los partidos del atleti llamando a consulta_partidos_atm
-    datos_partidos=objeto_consulta.consulta_partidos_atm()
-    #Devolvemos el html de la pagina partidos
-    return render_template("partidos.html", datos_partidos=datos_partidos)
+    global acceso
+
+    #Si tienes acceso puedes ver los partidos
+    if acceso:
+        #Obtenemos los datos de los partidos del atleti llamando a consulta_partidos_atm
+        datos_partidos=objeto_consulta.consulta_partidos_atm()
+        #Devolvemos el html de la pagina partidos
+        return render_template("partidos.html", datos_partidos=datos_partidos)
+    #Si no has tenido acceso, sigues sin tener y te devuelve a la pagina de inicio
+    else:
+        #Mostramos un mensaje de acceso denegado sin iniciar sesion
+        flash("Para poder acceder debes iniciar sesion primero!!","error")
+        return redirect(url_for('inicio'))
 
 
 #Creamos la funcion de la direccion de estadisticas
 @app.route('/estadisticas', methods=["POST", "GET"])
 def estadisticas():
+
+    global acceso
 
     #ESTADISTICA 1
     #Obtenemos los nombres de los estadios en los que se ha jugado (sin contar el del atleti)
@@ -72,16 +125,24 @@ def estadisticas():
     #Obtenemos el nombre del estadio que se ha visitado con mas capacidad y su capacidad
     estadistica3=objeto_estadistica.mas_grande()[0]
 
-
-    #Devolvemos el html de la pagina estadisticas
-    return render_template("estadisticas.html", 
-                            estadistica1=estadistica1, 
-                            estadistica2=estadistica2, 
-                            estadistica3=estadistica3)
-
+    #Si tienes acceso puedes ver las estadisticas
+    if acceso:
+        #Devolvemos el html de la pagina estadisticas
+        return render_template("estadisticas.html", 
+                                estadistica1=estadistica1, 
+                                estadistica2=estadistica2, 
+                                estadistica3=estadistica3)
+    #Si no has tenido acceso, sigues sin tener y te devuelve a la pagina de inicio
+    else:
+        #Mostramos un mensaje de acceso denegado sin iniciar sesion
+        flash("Para poder acceder debes iniciar sesion primero!!","error")
+        return redirect(url_for('inicio'))
+    
 #Creamos la funcion de la direccion de mapa
 @app.route('/mapa')
 def mapa():
+
+    global acceso
 
     #Obtenemos los datos para poner en el mapa llamando a puntos_mapa
     datos_para_mapa=objeto_consulta.puntos_mapa()
@@ -112,19 +173,105 @@ def mapa():
     #Guardamos el mapa como un template mas
     mapa.save(os.path.join(paths,"templates\mapa_desplazamientos.html"))
 
-    #Devolvemos el html de la pagina mapa_desplazamientos
-    return render_template("mapa_desplazamientos.html")
+    #Si tienes acceso puedes ver el mapa
+    if acceso:
+        #Devolvemos el html de la pagina mapa_desplazamientos
+        return render_template("mapa_desplazamientos.html")
+    #Si no has tenido acceso, sigues sin tener y te devuelve a la pagina de inicio
+    else:
+        #Mostramos un mensaje de acceso denegado sin iniciar sesion
+        flash("Para poder acceder debes iniciar sesion primero!!","error")
+        return redirect(url_for('inicio'))
 
+#Creamos la funcion del detalle del desplazamiento
 @app.route('/detalle/Desplazamiento<boton>')
 def detalle(boton):
 
+    #Obtenemos los datos del desplazamiento
     detalle_desplazamiento=list(objeto_consulta.detalle_desplazamiento(boton)[0])
+    #Obtenemos el path de la imagen del nombre del equipo
     equipo=os.path.join("\\static", f"{detalle_desplazamiento[0]}.png")
-    longitud_nombre=len(detalle_desplazamiento[0])
+    #Obtenemos la longitud del nombre del estadio
+    longitud_nombre_estadio=len(detalle_desplazamiento[2])
+    #Obtenemos el path de la imagen del pais
     pais=os.path.join("\\static", f"{detalle_desplazamiento[1].lower()}.png")
 
-    return render_template("detalle_desplazamiento.html", detalle_desplazamiento=detalle_desplazamiento[2:], equipo=equipo, longitud_nombre=longitud_nombre, pais=pais)
+    return render_template("detalle_desplazamiento.html", detalle_desplazamiento=detalle_desplazamiento[2:], equipo=equipo, longitud_nombre_estadio=longitud_nombre_estadio, pais=pais)
 
+#Creamos la funcion que nos permite logearnos
+@app.route('/login', methods=["POST", "GET"])
+def login():
+
+    global acceso
+
+    #Obtenemos el usuario y contraseña introducidos
+    usuario=request.form.get("usuario")
+    contrasena=request.form.get("contrasena")
+
+    #Realizamos una consulta a la tabla de usuarios para saber si esta registrado
+    consulta=objeto_admin.comprobacion(usuario, contrasena)
+
+    #Si la consulta devuelve datos, se accede a la pagina de login y el acceso se activa
+    if consulta!=[]:
+        acceso=True
+        return render_template("login.html", usuario=consulta[0][2])
+    #Si no devuelve nada la conuslta es que no son validas las credenciales
+    else:
+        #Mostramos un mensaje de acceso denegado debido a las credenciales
+        flash("El usuario o la contraseña no es valido!!","error")
+        return redirect(url_for('inicio'))
+
+#Creamos la funcion de la direccion registro
+@app.route('/registro', methods=["POST", "GET"])
+def registro():
+
+    return render_template("registro.html")
+
+#Creamos la funcion que nos permite registrarnos
+@app.route('/registro_correcto', methods=["POST", "GET"])
+def registro_correcto():
+
+    global acceso
+
+    #Obtenemos el nombre, usuario, contraseña y correo electronico introducidos
+    nombre_nuevo=request.form.get("nombre_nuevo").title()
+    usuario_nuevo=request.form.get("usuario_nuevo")
+    contrasena_nueva=request.form.get("contrasena_nueva")
+    correo_nuevo=request.form.get("correo_nuevo")
+
+    #Comprobamos que estan todos los campos introducidos
+    if nombre_nuevo and usuario_nuevo and contrasena_nueva and correo_nuevo:
+
+        #Comprobamos que cumple los requisitos de registro valido
+        if objeto_admin.registro_valido(nombre_nuevo, usuario_nuevo, contrasena_nueva, correo_nuevo):
+
+            #Comprobamos que no hay usuarios o correos duplicados
+            if objeto_admin.comprobacion_duplicados(usuario_nuevo, correo_nuevo):
+
+                #Insertamos el nuevo usuario en la tabla usuarios y activamos el acceso
+                objeto_admin.insertar_usuario(usuario_nuevo, contrasena_nueva, nombre_nuevo, correo_nuevo)
+                acceso=True
+
+                ##Comprobamos que se ha enviado el correo
+                if objeto_admin.enviar_correo(nombre_nuevo, usuario_nuevo, correo_nuevo):
+                    correo_confirmacion=f"Se ha enviado un correo de confirmacion a la direccion {correo_nuevo}!!"
+                else:
+                    correo_confirmacion=f"No se ha enviado un correo de confirmacion a la direccion {correo_nuevo}!!"
+                
+                return render_template("login.html", usuario=nombre_nuevo, correo_confirmacion=correo_confirmacion)
+            
+            else:
+                #Mostramos un mensaje de que el usuario o el correo ya han sido utilizados
+                flash("Usuario o correo electronico ya utilizados!!","error")
+                return redirect(url_for('registro'))
+        else:
+            #Mostramos un mensaje de que no cumple los requisitos validos
+            flash("No cumple los requisitos validos!!","error")
+            return redirect(url_for('registro'))
+    else:
+        #Mostramos un mensaje de que se deben introducir todos los datos
+        flash("Debes rellenar todos los campos!!","error")
+        return redirect(url_for('registro'))
 
 #Iniciamos la apliacion
 if __name__=="__main__":
