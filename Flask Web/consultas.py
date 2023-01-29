@@ -45,6 +45,20 @@ class Consulta():
 
 		return self.cursor.fetchall()
 
+	#Funcion que nos permite obtener el desplazamiento seleccionado en detalle
+	def detalle_desplazamiento(self, codigo):
+		self.cursor.execute("""USE futbol""")
+		self.cursor.execute("""SELECT p.Equipo, e.Pais, e.Nombre, e.Ciudad, e.Longitud, e.Latitud, d.FechaIda, d.FechaVuelta, d.Acompañamiento, d.Transporte
+                 FROM partidos p
+                 JOIN estadios e
+                 ON p.CodEstadio=e.CodEstadio
+                 JOIN desplazamientos d
+                 ON d.CodPartido=p.CodPartido
+                 WHERE CodDesplazamiento=%s""",
+                 (codigo,))
+		
+		return self.cursor.fetchall()
+
 
 
 #Clase para realizar las consultas de estadistica

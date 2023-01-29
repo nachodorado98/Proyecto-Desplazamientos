@@ -115,6 +115,17 @@ def mapa():
     #Devolvemos el html de la pagina mapa_desplazamientos
     return render_template("mapa_desplazamientos.html")
 
+@app.route('/detalle/Desplazamiento<boton>')
+def detalle(boton):
+
+    detalle_desplazamiento=list(objeto_consulta.detalle_desplazamiento(boton)[0])
+    equipo=os.path.join("\\static", f"{detalle_desplazamiento[0]}.png")
+    longitud_nombre=len(detalle_desplazamiento[0])
+    pais=os.path.join("\\static", f"{detalle_desplazamiento[1].lower()}.png")
+
+    return render_template("detalle_desplazamiento.html", detalle_desplazamiento=detalle_desplazamiento[2:], equipo=equipo, longitud_nombre=longitud_nombre, pais=pais)
+
+
 #Iniciamos la apliacion
 if __name__=="__main__":
     app.run(debug=True, host='127.0.0.1')

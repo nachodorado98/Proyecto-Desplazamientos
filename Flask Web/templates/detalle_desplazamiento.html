@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block titulo %}
+
+<div style="background-color: #f31e17;">
+  <br>
+  <center style="background-color: #f31e17;">
+    <h1 style="background-color: #f31e17; color: #ffffff; font-size: 500%; font-family: times;">DETALLE DESPLAZAMIENTO</h1>
+  <br>
+</div>
+
+{% endblock %}
+
+{% block cuerpo %}
+<div style="background-color: #f31e17;">
+  <center>
+<table class="table" style="background-color: #f31e17; width: 1170px;">
+    <tbody class="thead" style="background-color: #f31e17;">
+      <tr>
+        <td scope="col">
+          <div style="background-color: #f31e17; padding: 5px 7px;">
+            <img src="{{ equipo }}" width="450" height="450">
+          </div>
+        </td>
+        <td scope="col">
+          <div style="padding: 5px 7px;" style="background-color: #f31e17;">
+            <br><br>
+            <div class="list-group" style="width: 460px;">
+            <button type="button" class="list-group-item list-group-item-action" style="background-color: #ffffff;color: #f31e17;font-size: 320%; font-family: times; text-align:center">
+              <strong>{{ detalle_desplazamiento.0 }}</strong>
+            </button>
+            <button type="button" class="list-group-item list-group-item-action" style="background-color: #ffffff;color: #f31e17;font-size: 220%; font-family: times; text-align:center">
+              <strong>{{ detalle_desplazamiento.1 }}&emsp;</strong><img src="{{ pais }}" width="90" height="90">
+            </button>
+            <button type="button" class="list-group-item list-group-item-action" style="background-color: #ffffff;color: #f31e17;font-size: 180%; font-family: times; text-align:center">
+              <strong>{{ detalle_desplazamiento.4 }}&emsp;-&emsp;{{ detalle_desplazamiento.5 }}</strong>
+            </button>
+            <button type="button" class="list-group-item list-group-item-action" style="background-color: #ffffff;color: #f31e17;font-size: 180%; font-family: times; text-align:center">
+              <strong>{{ detalle_desplazamiento.6 }}</strong>
+            </button>
+            <button type="button" class="list-group-item list-group-item-action" style="background-color: #ffffff;color: #f31e17;font-size: 180%; font-family: times; text-align:center">
+              <strong>{{ detalle_desplazamiento.7 }}</strong>
+            </button>
+            </div>
+          </div>
+        </td>
+      </tr>
+      </td>
+    </tbody>
+</table>
+<a href="{{ url_for('desplazamientos') }}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">
+  Volver
+</a>
+<br>
+
+{% endblock %}
