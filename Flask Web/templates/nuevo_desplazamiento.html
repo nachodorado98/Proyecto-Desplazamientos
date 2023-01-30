@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block titulo %}
+
+<div style="background-color: #f31e17;">
+  <br>
+  <center style="background-color: #f31e17;">
+    <h1 style="background-color: #f31e17; color: #ffffff; font-size: 500%; font-family: times;">
+    	AGREGAR NUEVO DESPLAZAMIENTO
+    </h1>
+  <br>
+</div>
+
+{% endblock %}
+
+{% block cuerpo %}
+<div style="background-color: #f31e17;">
+  <center>
+  {% with messages=get_flashed_messages(with_categories=True) %}
+    {% for i in messages %}
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>{{ i.1 }}</strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    {% endfor %}
+  {% endwith %}
+	<form action="{{ url_for('insertar_datos') }}" method="POST">
+		<div class="col-md-5">
+	  	<label for="exampleInputEmail1" style="color: #ffffff; font-size: 300%; font-family: times;">
+	  		Partidos Visitante&nbsp;
+	  	</label>
+	    <select name="partidos">
+	    {% for i in partidos_visitante %}
+		  	<option value="{{ i.0 }} VS {{ i.1 }}">{{ i.0 }} VS {{ i.1 }}</option>
+		 	{% endfor %}
+			</select>
+	   </div>
+	   <br>
+	   <div>
+	    	<div>
+	    		<label for="example" style="color: #ffffff; font-size: 300%; font-family: times;">
+	  				Fechas Ida&nbsp;
+	  			</label>
+	    		<input type="date" name="fecha_ida" value="{{ hoy }}">
+	    		<label for="example" style="color: #ffffff; font-size: 300%; font-family: times;">
+	  				&emsp;Fechas Vuelta&nbsp;
+	  			</label>
+	    		<input type="date" name="fecha_vuelta" value="{{ hoy }}">
+	    	</div>
+	    	<br>
+	    	<div>
+	    		<label for="exampleInputEmail1" style="color: #ffffff; font-size: 300%; font-family: times;">
+			  		Acompañamiento&nbsp;
+			  	</label>
+			    <select name="acompanamiento">
+			    {% for i in acompanamiento %}
+				  	<option value="{{ i }}">{{ i }}</option>
+				 	{% endfor %}
+					</select>
+					<label for="exampleInputEmail1" style="color: #ffffff; font-size: 300%; font-family: times;">
+			  		&emsp;&emsp;&nbsp;Transporte&nbsp;
+			  	</label>
+			    <select name="transporte">
+			    {% for i in transporte %}
+				  	<option value="{{ i }}">{{ i }}</option>
+				 	{% endfor %}
+					</select>
+	    	</div>
+	    	<br>
+	    	<div>
+	    		<label for="exampleInputEmail1" style="color: #ffffff; font-size: 300%; font-family: times;">
+	    			Clave&nbsp;
+	    		</label>
+          <input type="password" class="form" name="clave" placeholder="Clave" autocomplete="off">
+	    	</div>
+	    </div>
+	    <br>
+		<button type="submit" class="btn btn-primary">Aceptar</button>
+	</form>
+	</center>
+<br>
+<br>
+</div> 
+
+{% endblock %}

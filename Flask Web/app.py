@@ -11,6 +11,8 @@ import folium
 import geopandas as gpd
 #Importamos la clase administrador
 from admin import Administrador
+#Importamos datetime para tratar las fechas
+from datetime import datetime, date
 
 
 #Creamos los objetos para las consultas
@@ -103,30 +105,30 @@ def estadisticas():
 
     global acceso
 
-    #ESTADISTICA 1
-    #Obtenemos los nombres de los estadios en los que se ha jugado (sin contar el del atleti)
-    estadios_jugados=objeto_estadistica.estadios_jugados()
-    #Obtenemos el numero de estadios jugados
-    cantidad_estadios_jugados=len(estadios_jugados)
-    #Obtenemos los nombres de los estadios a los que se ha ido
-    estadios_visitados=objeto_estadistica.estadios_visitados()
-    #Obtenemos el numero de estadios visitados
-    cantidad_estadios_visitados=len(estadios_visitados)
-    #Calculamos el porcentaje
-    porcentaje=int((cantidad_estadios_visitados/cantidad_estadios_jugados)*100)
-    #Lista con los datos necesarios para la estadistica1
-    estadistica1=[estadios_jugados,cantidad_estadios_jugados,estadios_visitados,cantidad_estadios_visitados,porcentaje]
-    
-    #ESTADISTICA 2
-    #Obtenemos el nombre del estadio que mas se ha visitado y el numero de veces
-    estadistica2=objeto_estadistica.mas_visitado()[0]
-
-    #ESTADISTICA 3
-    #Obtenemos el nombre del estadio que se ha visitado con mas capacidad y su capacidad
-    estadistica3=objeto_estadistica.mas_grande()[0]
-
     #Si tienes acceso puedes ver las estadisticas
     if acceso:
+        #ESTADISTICA 1
+        #Obtenemos los nombres de los estadios en los que se ha jugado (sin contar el del atleti)
+        estadios_jugados=objeto_estadistica.estadios_jugados()
+        #Obtenemos el numero de estadios jugados
+        cantidad_estadios_jugados=len(estadios_jugados)
+        #Obtenemos los nombres de los estadios a los que se ha ido
+        estadios_visitados=objeto_estadistica.estadios_visitados()
+        #Obtenemos el numero de estadios visitados
+        cantidad_estadios_visitados=len(estadios_visitados)
+        #Calculamos el porcentaje
+        porcentaje=int((cantidad_estadios_visitados/cantidad_estadios_jugados)*100)
+        #Lista con los datos necesarios para la estadistica1
+        estadistica1=[estadios_jugados,cantidad_estadios_jugados,estadios_visitados,cantidad_estadios_visitados,porcentaje]
+        
+        #ESTADISTICA 2
+        #Obtenemos el nombre del estadio que mas se ha visitado y el numero de veces
+        estadistica2=objeto_estadistica.mas_visitado()[0]
+
+        #ESTADISTICA 3
+        #Obtenemos el nombre del estadio que se ha visitado con mas capacidad y su capacidad
+        estadistica3=objeto_estadistica.mas_grande()[0]
+
         #Devolvemos el html de la pagina estadisticas
         return render_template("estadisticas.html", 
                                 estadistica1=estadistica1, 
@@ -272,6 +274,62 @@ def registro_correcto():
         #Mostramos un mensaje de que se deben introducir todos los datos
         flash("Debes rellenar todos los campos!!","error")
         return redirect(url_for('registro'))
+
+#Creamos la funcion que nos permite entrar en la pagina para realizar el nuevo desplazamiento
+@app.route('/nuevo_desplazamiento', methods=["POST", "GET"])
+def nuevo_desplazamiento():
+
+    global acceso
+
+    #Obtenemos la fecha del ultimo desplazamiento llamando a fecha_ultimo_desplazamiento
+    fecha_ultimo=objeto_consulta.fecha_ultimo_deplazamiento()
+    #Obtenemos los partidos de visitante posteriores a la fecha obtenida llamando a partidos_visitante
+    partidos_visitante=objeto_consulta.partidos_visitante(fecha_ultimo)
+    #Obtenemos la fecha actual
+    hoy=datetime.now().strftime("%Y-%m-%d")
+    #Opciones de la combobox para el acompañamiento y el transporte
+    acompanamiento=["Mi Amor", "Solito", "Familia"]
+    transporte=["Avion","AVE/Tren", "La Renfe", "Bus", "Andando", "Bus Verde"]
+
+    #Si tienes acceso puedes insertar un nuevo desplazamiento
+    if acceso:
+        return render_template("nuevo_desplazamiento.html", partidos_visitante=partidos_visitante, hoy=hoy, acompanamiento=acompanamiento, transporte=transporte)
+    #Si no has tenido acceso, sigues sin tener y te devuelve a la pagina de inicio
+    else:
+        #Mostramos un mensaje de acceso denegado sin iniciar sesion
+        flash("Para poder acceder debes iniciar sesion primero!!","error")
+        return redirect(url_for('inicio'))
+
+#Creamos la funcion de la direccion exito
+@app.route('/exito', methods=["POST", "GET"])
+def insertar_datos():
+
+    #Obtenemos el partido, las fechas, el acompañamiento, el transporte y la clave introducidos
+    partido=request.form.get("partidos")
+    fecha_ida=request.form.get("fecha_ida")
+    fecha_vuelta=request.form.get("fecha_vuelta")
+    acompanamiento=request.form.get("acompanamiento")
+    transporte=request.form.get("transporte")
+    clave=request.form.get("clave")
+
+    #Si la clave es correcta, podremos insertar el nuevo desplazamiento
+    if clave=="clavesecreta":
+
+        #Dividimos el partido seleccionado en la fecha y el equipo
+        partido_dividido=partido.split(" VS ")
+        fecha=partido_dividido[0]
+        equipo=partido_dividido[1]
+        #Obtenemos el codigo del partido con la funcion obtener_codigo_partido
+        codigo_partido=objeto_consulta.obtener_codigo_partido(fecha, equipo)
+        #Insertamos el registro del desplazamiento en la BBDD con la funcion insertar_desplazamiento
+        objeto_consulta.insertar_desplazamiento(codigo_partido, fecha_ida, fecha_vuelta, acompanamiento, transporte)
+        return render_template("registro_exitoso.html", partido=partido, fecha_ida=fecha_ida, fecha_vuelta=fecha_vuelta, acompanamiento=acompanamiento, transporte=transporte)
+    #Si no es correcta, no puedes añadirlo
+    else:
+        #Mostramos un mensaje de error en la clave introducida
+        flash("Clave incorrecta! No puedes insertar el desplazamiento","error")
+        return redirect(url_for('nuevo_desplazamiento'))
+
 
 #Iniciamos la apliacion
 if __name__=="__main__":

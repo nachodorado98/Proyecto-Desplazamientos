@@ -59,7 +59,56 @@ class Consulta():
 		
 		return self.cursor.fetchall()
 
+	#Funcion para obtener la fecha del ultimo desplazamiento
+	def fecha_ultimo_deplazamiento(self):
+		self.cursor.execute("""USE futbol""")
+		self.cursor.execute("""SELECT max(Fecha)
+                 FROM partidos p
+                 JOIN desplazamientos d
+                 ON p.CodPartido=d.CodPartido""")
+		
+		#Intenta devolver la fecha del ultimo desplazamiento
+		try:
+			return self.cursor.fetchall()[0][0].strftime("%Y-%m-%d")
 
+		#Si aun no hay ningun desplazamiento, para que te devuelva una fecha en vez de None, ponemos una fecha por defecto (anterior a cualquier partido disputado de esta temporada)
+		except:
+			return "2022-01-01"
+
+	#Funcion que nos permite obtener los partidos visitante
+	def partidos_visitante(self, fecha):
+		self.cursor.execute("""USE futbol""")
+		self.cursor.execute("""SELECT Fecha, Equipo
+                 FROM partidos 
+                 WHERE CodEstadio != 2830
+                 AND Fecha>%s
+                 ORDER BY Fecha""",
+                 (fecha,))
+		
+		return self.cursor.fetchall()
+
+	#Funcion que nos permite obtener el codigo del partido a traves de la fecha y el equipo
+	def obtener_codigo_partido(self, fecha, equipo):
+		self.cursor.execute("""USE futbol""")
+		self.cursor.execute("""SELECT CodPartido
+                				FROM partidos 
+                 				WHERE Fecha=%s and Equipo=%s""",
+             				(fecha, equipo))
+
+		codigopartido=self.cursor.fetchone()
+		return codigopartido[0]
+
+	#Funcion que nos permite insertar los desplazamientos en la tabla
+	def insertar_desplazamiento(self, codigo, ida, vuelta, acompanante, transporte):
+		self.cursor.execute("""USE futbol""")
+		self.cursor.execute("""INSERT INTO desplazamientos 
+								VALUES(%s,%s,%s,%s,%s,%s)""",
+								(None,codigo,ida,vuelta,acompanante,transporte))
+
+		self.bbdd.commit()
+		
+
+		
 
 #Clase para realizar las consultas de estadistica
 class Estadistica(Consulta):

@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block titulo %}
+
+<div style="background-color: #f31e17;">
+  <br>
+  <center style="background-color: #f31e17;">
+    <h1 style="background-color: #f31e17; color: #ffffff; font-size: 500%; font-family: times;">
+      AGREGADO CON ÉXITO!
+    </h1>
+  <br>
+</div>
+
+{% endblock %}
+
+{% block cuerpo %}
+<div style="background-color: #f31e17;">
+  <center>
+	<img src="{{ url_for('static', filename='koke.png') }}" alt="Logo" width="320" height="307.7" class="d-inline-block align-text-top">
+	<br><br>
+<table class="table table-striped" style="border: 1px solid black; text-align: center; width:1100px">
+  <thead class="thead-dark" style="background-color: #bab3b3;">
+    <tr>
+      <th scope="col" style="border: 1px solid black; font-size: 130%; font-family: times; width:15%">Partido</th>
+      <th scope="col" style="border: 1px solid black; font-size: 130%; font-family: times; width:10%">Fecha Ida</th>
+      <th scope="col" style="border: 1px solid black; font-size: 130%; font-family: times; width:10%">Fecha Vuelta</th>
+      <th scope="col" style="border: 1px solid black; font-size: 130%; font-family: times; width:14%">Acompañamiento</th>
+      <th scope="col" style="border: 1px solid black; font-size: 130%; font-family: times; width:15%">Transporte</th>
+    </tr>
+  </thead>
+  <tbody>
+  	<tr style="height:20px;">
+      <td style="background-color: #f67671; padding: 15px;"><strong>{{ partido }}</strong></td>
+      <td style="background-color: #ffffff; padding: 15px;"><strong>{{ fecha_ida }}</strong></td>
+      <td style="background-color: #f67671; padding: 15px;"><strong>{{ fecha_vuelta }}</strong></td>
+      <td style="background-color: #ffffff; padding: 15px;"><strong>{{ acompanamiento }}</strong></td>
+      <td style="background-color: #f67671; padding: 15px;"><strong>{{ transporte }}</strong></td>
+    </tr>
+  </tbody>
+</table>
+<a href="{{ url_for('desplazamientos') }}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">
+  Volver
+</a>
+</center>
+</div>
+{% endblock %}
