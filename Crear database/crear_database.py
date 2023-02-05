@@ -219,4 +219,4 @@ consulta_creacion_usuario="""CREATE TABLE usuarios
             Nombre VARCHAR(50),
             Email VARCHAR(50))"""
 
-creacion_tabla_usuario=tabla_usuario.crear_tabla(consulta_creacion_usuario)
+#creacion_tabla_usuario=tabla_usuario.crear_tabla(consulta_creacion_usuario)

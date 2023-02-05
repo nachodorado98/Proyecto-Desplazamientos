@@ -25,6 +25,12 @@ def partidos_a_insertar(df_partidos, fecha):
 	return lista
 
 
+#Funcion que nos devuelve el codigo maximo
+def maximo_codigo(bbdd, c):
+    c.execute("""USE futbol""")
+    c.execute("""SELECT max(CodCompeticion) FROM competiciones""")
+    return c.fetchone()
+
 #-------------------------------------------------------Insertar en tabla ligas
 ligas=Tabla("ligas", nombre_bbdd, bbdd, c)
 #NombreLiga, MasParticipaciones, Participaciones, MasVictorias, Victorias, MasDerrotas, Derrotas, MasGolesPartido, MasExpulsado, Expulsiones, PorteroMasInvicto, Minutos, MasEntrenados, Entrenados
@@ -36,13 +42,38 @@ VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
 
 
 #--------------------------------------------------------Insertar en tabla competiciones
-competiciones=Tabla("competiciones", nombre_bbdd, bbdd, c)
-#CodCompeticion, Competicion, Temporada, NumeroEquipos, Campeon, Pichichi, Goles
-registro_competiciones=[]
-consulta_insertar_competiciones="""INSERT INTO competiciones 
-VALUES(%s, %s, %s, %s, %s, %s, %s)"""
-#insertar_competiciones=competiciones.insertar_registros(consulta_insertar_competiciones, [registro_competiciones])
+#Leemos el excel con las competiciones y los obtenemos ne forma de lista
+df_competiciones=pd.read_excel("competiciones.xlsx").fillna("NULL")
+lista_competiciones=df_competiciones.values.tolist()
+#Comprobamos que el campeon ya esta definido (que ese campo no es NULL) en TODAS las competiciones
+if lista_competiciones[0][4]!="NULL" and lista_competiciones[1][4]!="NULL" and lista_competiciones[2][4]!="NULL":
+	print(lista_competiciones)
+	competiciones=Tabla("competiciones", nombre_bbdd, bbdd, c)
+	#Preguntamos por pantalla si estamos seguros de insertarlos
+	respuesta=input("¿Quieres actualizar las competiciones? Si o No\n")
+	if respuesta.lower()=="si":
+		consulta_actualizar_competiciones="""UPDATE competiciones SET Campeon=%s, Pichichi=%s, Goles=%s
+		WHERE CodCompeticion=%s"""
+		consulta_insertar_competiciones="""INSERT INTO competiciones 
+		VALUES(%s, %s, %s, %s, %s, %s, %s)"""
+		#Actualizamos e insertamos una nueva temporada en cada competicion
+		for i in range(len(lista_competiciones)):
+			#Actualizamos el campeon, pichichi y los goles de las competiciones
+			competiciones.actualizar_registro(consulta_actualizar_competiciones, [lista_competiciones[i][4],lista_competiciones[i][5],lista_competiciones[i][6],lista_competiciones[i][7]])
+			#Obtenemos el codigo maximo que se haya insertado
+			codigo_maximo=maximo_codigo(bbdd, c)
+			#Aumentamos en uno la temporada siguiente
+			temporada_nueva=[str(int(i)+1) for i in lista_competiciones[i][2].split("-")]
+			#Insertamos un nuevo registro poniendo el codigo de la competicion uno mas que el maximo que ya teniamos (ya que no es AUTO_INCREMENT)
+			lista_insertar=[codigo_maximo[0]+1, lista_competiciones[i][1], "-".join(temporada_nueva), lista_competiciones[i][3], "Nada", "Nada", 0]
+			competiciones.insertar_registros(consulta_insertar_competiciones,[lista_insertar])
+			print(lista_insertar)
 
+		print("Se han acttualizado las competiciones")
+	else:
+		print("No se han actualizado las competiciones")
+else:
+	print("No hay competiciones para insertar")
 
 
 #--------------------------------------------------------Insertar en tabla estadios
@@ -75,6 +106,7 @@ partidos_insertar=partidos_a_insertar(df_partidos, fecha_ultimo_partido)
 
 #Si hay partidos jugados que superen la fecha del ultimo insertado
 if partidos_insertar!=[]:
+	#Agregamos a cada partido un campo inicial de None para luego insertar en la tabla ya que es AUTO_INCREMENT
 	for i in partidos_insertar:
 		i.insert(0, None)
 	print(partidos_insertar)
@@ -97,4 +129,7 @@ else:
 #--------------------------------------------------------Insertar en tabla deslazamientos
 #Los registros de esta tabla se insertan a partir de la interfaz grafica
 
+
+#--------------------------------------------------------Insertar en tabla usuarios
+#Los registros de esta tabla se insertan a partir de la interfaz grafica
 

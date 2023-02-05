@@ -41,3 +41,11 @@ class Tabla():
 			self.cursor.execute(consulta,tuple(i))
 			self.bbdd.commit()
 		return True
+
+	#Actualizar los registros en la tabla
+	def actualizar_registro(self, consulta, registro):
+		self.cursor.execute(f"USE {self.nombre_bbdd}")
+		self.cursor.execute(consulta,tuple(registro))
+		self.bbdd.commit()
+		return True
+
